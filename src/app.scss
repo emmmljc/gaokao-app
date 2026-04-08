@@ -1,0 +1,101 @@
+/* 全局样式 - 适配 Taro 移动端 */
+
+page {
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-light: #6366f1;
+
+  --color-bg-base: #fafafa;
+  --color-text-main: #09090b;
+  --color-text-secondary: #52525b;
+  --color-text-tertiary: #a1a1aa;
+  --color-border: #e4e4e7;
+  --color-border-hover: #d4d4d8;
+  --color-surface: #ffffff;
+
+  --color-danger: #e11d48;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-info: #0284c7;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.02);
+
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+}
+
+page, body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--color-bg-base);
+  color: var(--color-text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+#app, .taro_page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 通用工具类 */
+.container {
+  max-width: 100%;
+  padding: 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #0ea5e9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Ant Design Mobile 适配 */
+.adm-safe-area-top {
+  --adm-safe-area-top: env(safe-area-inset-top);
+}
+.adm-safe-area-bottom {
+  --adm-safe-area-bottom: env(safe-area-inset-bottom);
+}

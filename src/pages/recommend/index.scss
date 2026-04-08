@@ -1,0 +1,235 @@
+.recommend-page {
+  min-height: 100vh;
+  background-color: var(--color-bg-base);
+  padding-bottom: 24px;
+}
+
+.recommend-header {
+  padding: 24px 24px 16px;
+  text-align: center;
+}
+
+.recommend-title {
+  display: block;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 8px;
+}
+
+.recommend-subtitle {
+  display: block;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.mode-tabs {
+  padding: 0 24px 16px;
+}
+
+.tier-tabs {
+  :global(.adm-tabs) {
+    background: transparent;
+  }
+}
+
+.tier-scroll {
+  height: calc(100vh - 280px);
+}
+
+.tier-content {
+  padding: 12px 16px;
+}
+
+/* School Card */
+.school-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--color-border);
+
+  &.card-reach {
+    border-left: 3px solid #f59e0b;
+  }
+  &.card-steady {
+    border-left: 3px solid #3b82f6;
+  }
+  &.card-safe {
+    border-left: 3px solid #10b981;
+  }
+}
+
+.school-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.school-rank-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.school-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.school-name {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 6px;
+}
+
+.school-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Probability Bar */
+.prob-bar {
+  margin-bottom: 12px;
+}
+
+.prob-bar-bg {
+  height: 6px;
+  background: var(--color-fill-2);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.prob-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.prob-value {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Majors */
+.school-majors {
+  margin-top: 8px;
+}
+
+.majors-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.majors-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.major-tag {
+  font-size: 12px;
+}
+
+.major-more {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  align-self: center;
+}
+
+/* Empty State */
+.empty-tier {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: var(--color-text-tertiary);
+}
+
+/* Loading */
+.recommend-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 16px;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* Need Profile */
+.recommend-need-profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.profile-prompt-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: 32px 24px;
+  text-align: center;
+  border: 1px solid var(--color-border);
+  width: 100%;
+  max-width: 360px;
+}
+
+.prompt-title {
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 12px;
+}
+
+.prompt-desc {
+  display: block;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.prompt-btn {
+  height: 44px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* Portfolio Info Card */
+.portfolio-info-card {
+  margin-bottom: 12px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.portfolio-info-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}

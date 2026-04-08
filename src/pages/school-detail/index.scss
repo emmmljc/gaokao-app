@@ -1,0 +1,358 @@
+.school-detail-page {
+  min-height: 100vh;
+  background: var(--color-bg-base);
+  padding-bottom: 24px;
+}
+
+.loading-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-base);
+}
+
+.loading-text {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  background: var(--color-bg-base);
+}
+
+.error-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-text-main);
+  margin-bottom: 24px;
+}
+
+// School Header
+.school-header {
+  background: var(--color-bg-base);
+  padding: 24px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.school-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.school-avatar-large-text {
+  font-size: 36px;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.school-header-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.header-tag {
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.school-header-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.school-header-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.header-info-item {
+  display: flex;
+  align-items: center;
+}
+
+.school-header-extra-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.header-extra-tag {
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border);
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+.header-extra-tag-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+// Main Tabs
+.main-tabs {
+  --adm-tabs-title-font-size: 15px;
+  padding: 0 16px;
+}
+
+.overview-content {
+  padding: 16px 0;
+}
+
+.info-card {
+  background: var(--color-surface);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 8px;
+}
+
+.card-subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+}
+
+// Score Trend Placeholder
+.score-trend-placeholder {
+  background: var(--color-bg-base);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.placeholder-text {
+  font-size: 14px;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.score-table {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.score-table-header {
+  display: flex;
+  background: var(--color-bg-base);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.score-table-row {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.score-table-cell {
+  flex: 1;
+  padding: 12px 8px;
+  font-size: 13px;
+  color: var(--color-text-main);
+  text-align: center;
+  
+  &:first-child {
+    font-weight: 500;
+  }
+}
+
+.no-data-placeholder {
+  padding: 44px 24px;
+  text-align: center;
+  background: var(--color-bg-base);
+  border-radius: 8px;
+}
+
+.no-data-text {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+// Contact Info
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contact-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contact-value {
+  font-size: 14px;
+  color: var(--color-text-main);
+  font-weight: 500;
+}
+
+// School Description
+.school-description {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+}
+
+// Majors Content
+.majors-content {
+  padding: 16px 0;
+}
+
+.majors-header {
+  margin-bottom: 16px;
+}
+
+.majors-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 8px;
+}
+
+.majors-subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.subject-capsule-tabs {
+  margin-bottom: 16px;
+}
+
+.year-tabs {
+  --adm-tabs-title-font-size: 14px;
+}
+
+// Major Groups
+.major-groups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.major-group-card {
+  background: var(--color-surface);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+}
+
+.major-group-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.major-group-title-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.major-group-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text-main);
+}
+
+.major-group-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.major-group-tag {
+  border-radius: 2px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  
+  &.secondary {
+    background: var(--color-bg-base);
+    color: var(--color-text-secondary);
+    font-weight: 400;
+  }
+}
+
+.major-group-requirements {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.major-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.major-item {
+  padding: 6px 12px;
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.major-item-text {
+  font-size: 13px;
+  color: var(--color-text-main);
+}
+
+.no-majors-placeholder {
+  padding: 56px 24px;
+  text-align: center;
+  background: var(--color-bg-base);
+  border-radius: 8px;
+}
+
+.no-majors-text {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  font-style: italic;
+}

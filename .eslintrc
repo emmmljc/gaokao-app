@@ -1,0 +1,21 @@
+export default {
+  extends: ['taro'],
+  rules: {
+    'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
+    'react/prop-types': 0,
+    'import/no-commonjs': 0,
+  },
+  globals: {
+    wx: true,
+    qq: true,
+    tt: true,
+    swan: true,
+    my: true,
+    BMap: true,
+    AMAap: true,
+    define: true,
+    require: true,
+    window: true,
+    document: true,
+  },
+}

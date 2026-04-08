@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables (keep .env and .env.development for sharing config)
+.env.local
+.env.*.local
+
+# React Native / Taro
+ios/
+android/
+*.jsbundle
+*.map
+
+# Temp
+.tmp/
+.temp/

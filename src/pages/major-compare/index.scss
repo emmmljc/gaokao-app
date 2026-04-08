@@ -1,0 +1,374 @@
+.major-compare-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.major-compare-scroll {
+  height: 100vh;
+  padding: 24px 16px;
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.filter-card {
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.filter-row:last-of-type {
+  border-bottom: none;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4f46e5;
+}
+
+.filter-picker-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.filter-picker-value {
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.filter-picker-arrow {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.rank-input {
+  --font-size: 14px;
+  --color: #0f172a;
+  --placeholder-color: #94a3b8;
+  --background: #f8fafc;
+  --border: 1px solid #e2e8f0;
+  --border-radius: 8px;
+  width: 120px;
+}
+
+.compare-btn {
+  margin-top: 16px;
+  --border-radius: 8px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+  gap: 12px;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.empty-container {
+  padding: 60px 0;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.results-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.summary-section {
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.section-desc {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.summary-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summary-card {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.summary-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.summary-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.summary-value.primary {
+  color: #4f46e5;
+}
+
+.summary-value.danger {
+  color: #ef4444;
+}
+
+.summary-unit {
+  font-size: 14px;
+  font-weight: 400;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+.summary-desc {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.summary-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.summary-sub {
+  margin-top: 12px;
+}
+
+.insight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.insight-item {
+  font-size: 13px;
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+.insight-empty {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.chart-card {
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.chart-placeholder {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.chart-placeholder-text {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.schools-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.school-card {
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.school-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.school-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.school-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.school-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.school-tag {
+  font-size: 12px;
+}
+
+.school-info-right {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.suitability-tag {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.trend-tag {
+  font-size: 12px;
+}
+
+.school-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.meta-text {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 80px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.stat-value.highlight {
+  color: #4f46e5;
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.progress-value {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.page-footer {
+  height: 40px;
+}

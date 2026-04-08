@@ -1,0 +1,235 @@
+.school-list-page {
+  min-height: 100vh;
+  background: var(--color-bg-base);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  background: var(--color-surface);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+}
+
+.search-bar {
+  flex: 1;
+  --adm-search-bar-background: transparent;
+  --adm-search-bar-border-radius: 6px;
+}
+
+.filter-btn {
+  height: 32px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.filter-section {
+  background: var(--color-surface);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--color-border);
+}
+
+.filter-row {
+  margin-bottom: 16px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filter-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.filter-picker-value {
+  font-size: 14px;
+  color: var(--color-text-main);
+}
+
+.filter-picker-arrow {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}
+
+.tag-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-tag {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.results-section {
+  flex: 1;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+}
+
+.loading-text {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+  background: var(--color-surface);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.results-count {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.school-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.school-card {
+  background: var(--color-surface);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  
+  &:active {
+    border-color: var(--color-primary);
+  }
+}
+
+.school-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.school-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: var(--color-bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+}
+
+.school-avatar-text {
+  font-size: 18px;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.school-tags {
+  display: flex;
+  gap: 4px;
+}
+
+.school-tag {
+  margin: 0;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.school-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.school-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+}
+
+.school-location {
+  display: flex;
+  align-items: center;
+}
+
+.school-divider {
+  color: var(--color-border);
+}
+
+.school-type {
+  display: flex;
+  align-items: center;
+}
+
+.school-extra-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.extra-tag {
+  background: var(--color-bg-base);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.extra-tag-text {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}

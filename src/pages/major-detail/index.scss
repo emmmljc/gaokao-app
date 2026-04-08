@@ -1,0 +1,263 @@
+.major-detail-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8fafc;
+  gap: 12px;
+}
+
+.major-detail-loading-text {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.major-detail-empty {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: #f8fafc;
+}
+
+.major-detail-container {
+  min-height: 100vh;
+  padding: 16px;
+  background-color: #f8fafc;
+}
+
+.major-detail-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+}
+
+.major-detail-back-icon {
+  font-size: 16px;
+}
+
+.major-detail-back-text {
+  font-size: 14px;
+}
+
+.major-info-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.major-info-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  background: rgba(79, 70, 229, 0.06);
+  border: 1px solid rgba(79, 70, 229, 0.1);
+}
+
+.major-info-badge-icon {
+  font-size: 12px;
+}
+
+.major-info-badge-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4f46e5;
+}
+
+.major-info-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.major-info-subtitle {
+  font-size: 16px;
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+.major-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.major-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.major-info-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.major-info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.major-chart-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.major-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 16px;
+}
+
+.major-chart-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.major-chart-placeholder-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  background: rgba(79, 70, 229, 0.06);
+  font-size: 24px;
+}
+
+.major-chart-placeholder-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.major-chart-placeholder-desc {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.major-schools-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.major-schools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.major-school-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+
+  &:active {
+    background: #fff;
+    border-color: rgba(79, 70, 229, 0.2);
+  }
+}
+
+.major-school-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.major-school-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.major-school-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.major-school-location-icon {
+  font-size: 14px;
+}
+
+.major-school-location-text {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.major-school-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  font-size: 14px;
+}
+
+.major-schools-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.major-schools-empty-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.major-schools-empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.major-schools-empty-desc {
+  font-size: 14px;
+  color: #64748b;
+}
