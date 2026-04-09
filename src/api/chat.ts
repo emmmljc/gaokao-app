@@ -76,6 +76,13 @@ function emitChunk(parsed: ParsedSseEvent, handlers: StreamHandlers): EmitResult
   return { done: false }
 }
 
+/** Detect Capacitor native environment (Android/iOS) */
+function isNativePlatform(): boolean {
+  return typeof window !== 'undefined'
+    && 'Capacitor' in window
+    && !!(window as any).Capacitor?.isNativePlatform?.()
+}
+
 export const chatApi = {
   createConversation: (): Promise<ChatConversationResponse> => request('post', '/chat/new'),
 
@@ -94,7 +101,37 @@ export const chatApi = {
       headers.Authorization = `Bearer ${token}`
     }
 
-    const response = await fetch(`${API_BASE_URL}/chat/stream`, {
+    const url = `${API_BASE_URL}/chat/stream`
+
+    if (isNativePlatform()) {
+      // Capacitor native: CapacitorHttp buffers the full response,
+      // so ReadableStream won't stream progressively. Parse the
+      // complete SSE text at once instead.
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+        signal: handlers.signal,
+      })
+
+      if (!response.ok) {
+        throw new Error(await parseErrorResponse(response))
+      }
+
+      const text = await response.text()
+      const blocks = text.split(/\r?\n\r?\n/)
+
+      for (const block of blocks) {
+        const parsed = parseSseBlock(block)
+        if (!parsed) continue
+        const result = emitChunk(parsed, handlers)
+        if (result.done) return
+      }
+      return
+    }
+
+    // Web: use streaming ReadableStream for real-time SSE
+    const response = await fetch(url, {
       method: 'POST',
       headers,
       body: JSON.stringify(payload),
