@@ -1,6 +1,7 @@
 .score-analysis-page {
   min-height: 100vh;
   background: var(--color-bg-base, #f5f5f5);
+  padding-bottom: 120px; // Space for tabBar
 }
 
 .score-analysis-scroll {

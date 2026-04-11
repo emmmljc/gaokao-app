@@ -2,6 +2,8 @@ import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { Button } from 'antd-mobile'
 import { useAuth } from '@/contexts/useAuthHook'
+import { useSwipeTab } from '@/hooks/useSwipeTab'
+import CustomTabBar from '@/custom-tab-bar'
 import './index.scss'
 
 const features = [
@@ -30,6 +32,7 @@ const features = [
 
 export default function HomePage() {
   const { user } = useAuth()
+  const swipeHandlers = useSwipeTab()
 
   const handleNavigate = (url: string) => {
     Taro.navigateTo({ url })
@@ -44,7 +47,7 @@ export default function HomePage() {
   }
 
   return (
-    <View className="home-container">
+    <View className="home-container" {...swipeHandlers}>
       {/* Hero Section */}
       <View className="hero-section">
         <View className="hero-bg-glow" />
@@ -130,6 +133,7 @@ export default function HomePage() {
           ))}
         </View>
       </View>
+      <CustomTabBar />
     </View>
   )
 }

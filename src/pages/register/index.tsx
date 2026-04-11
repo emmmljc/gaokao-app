@@ -45,6 +45,10 @@ export default function RegisterPage() {
     Taro.navigateTo({ url: '/pages/login/index' })
   }
 
+  const goToHome = () => {
+    Taro.switchTab({ url: '/pages/home/index' })
+  }
+
   return (
     <View className="register-page">
       <View className="register-container">
@@ -116,6 +120,9 @@ export default function RegisterPage() {
             <View className="register-footer-link" onClick={goToLogin}>
               立即登录
             </View>
+          </View>
+          <View className="register-home-link" onClick={goToHome}>
+            返回首页
           </View>
         </Card>
       </View>

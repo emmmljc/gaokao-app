@@ -55,3 +55,16 @@
   margin-left: 6px;
   cursor: pointer;
 }
+
+.register-home-link {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.register-home-link:active {
+  color: var(--color-text-secondary);
+}

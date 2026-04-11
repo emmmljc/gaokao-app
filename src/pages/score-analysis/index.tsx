@@ -4,6 +4,8 @@ import Taro from '@tarojs/taro'
 import { Card, Button, Input, Picker, Toast } from 'antd-mobile'
 import { scoreApi } from '@/api/score'
 import type { ScoreRanking, ScoreToRankResponse } from '@/types'
+import { useSwipeTab } from '@/hooks/useSwipeTab'
+import CustomTabBar from '@/custom-tab-bar'
 import './index.scss'
 
 const SCORE_ANALYSIS_YEARS = [2025, 2024, 2023, 2022, 2021]
@@ -21,6 +23,8 @@ export default function ScoreAnalysisPage() {
 
   const [yearPickerVisible, setYearPickerVisible] = useState(false)
   const [subjectPickerVisible, setSubjectPickerVisible] = useState(false)
+
+  const swipeHandlers = useSwipeTab()
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
@@ -72,7 +76,7 @@ export default function ScoreAnalysisPage() {
     : []
 
   return (
-    <View className="score-analysis-page">
+    <View className="score-analysis-page" {...swipeHandlers}>
       <ScrollView scrollY className="score-analysis-scroll">
         {/* Header */}
         <View className="page-header">
@@ -264,6 +268,7 @@ export default function ScoreAnalysisPage() {
 
         <View className="page-footer" />
       </ScrollView>
+      <CustomTabBar />
     </View>
   )
 }

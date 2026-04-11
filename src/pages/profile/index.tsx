@@ -3,6 +3,8 @@ import { View, Text } from '@tarojs/components'
 import { Form, Input, Button, Toast, Card, Space, Picker, DotLoading } from 'antd-mobile'
 import { profileApi } from '@/api/profile'
 import type { UserProfile } from '@/types'
+import { useSwipeTab } from '@/hooks/useSwipeTab'
+import CustomTabBar from '@/custom-tab-bar'
 import './index.scss'
 
 const SUBJECT_TYPES = ['物理类', '历史类']
@@ -15,6 +17,8 @@ export default function ProfilePage() {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+
+  const swipeHandlers = useSwipeTab()
 
   useEffect(() => {
     (async () => {
@@ -45,7 +49,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <View className='profile-loading'>
+      <View className='profile-loading' {...swipeHandlers}>
         <DotLoading color='primary' />
         <Text className='profile-loading-text'>正在加载个人档案...</Text>
       </View>
@@ -53,7 +57,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <View className='profile-page'>
+    <View className='profile-page' {...swipeHandlers}>
       <View className='profile-header'>
         <Text className='profile-title'>个人档案</Text>
         <Text className='profile-subtitle'>完善您的档案，获取更精准的志愿推荐</Text>
@@ -185,6 +189,7 @@ export default function ProfilePage() {
           </Form.Item>
         </Card>
       </Form>
+      <CustomTabBar />
     </View>
   )
 }

@@ -4,6 +4,8 @@ import Taro from '@tarojs/taro'
 import { SearchBar, Tag, Button, Empty, DotLoading, Picker, Popup } from 'antd-mobile'
 import { schoolApi } from '@/api/school'
 import type { School } from '@/types'
+import { useSwipeTab } from '@/hooks/useSwipeTab'
+import CustomTabBar from '@/custom-tab-bar'
 import './index.scss'
 
 const PROVINCES = ['北京', '天津', '河北', '山西', '内蒙古', '辽宁', '吉林', '黑龙江', '上海', '江苏', '浙江', '安徽', '福建', '江西', '山东', '河南', '湖北', '湖南', '广东', '广西', '海南', '重庆', '四川', '贵州', '云南', '西藏', '陕西', '甘肃', '青海', '宁夏', '新疆']
@@ -25,6 +27,8 @@ export default function SchoolListPage() {
   // Picker popup states
   const [provincePickerVisible, setProvincePickerVisible] = useState(false)
   const [schoolTypePickerVisible, setSchoolTypePickerVisible] = useState(false)
+
+  const swipeHandlers = useSwipeTab()
 
   useEffect(() => {
     const timer = setTimeout(async () => {
@@ -67,7 +71,7 @@ export default function SchoolListPage() {
   const hasFilters = keyword || province || schoolType || tag985 || tag211 || doubleFirst
 
   return (
-    <View className="school-list-page">
+    <View className="school-list-page" {...swipeHandlers}>
       {/* Search Section */}
       <View className="search-section">
         <SearchBar
@@ -245,6 +249,7 @@ export default function SchoolListPage() {
           </>
         )}
       </View>
+      <CustomTabBar />
     </View>
   )
 }
