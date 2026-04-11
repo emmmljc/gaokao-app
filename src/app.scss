@@ -26,6 +26,10 @@ page {
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-2xl: 20px;
+
+  /* Safe area for notched phones */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 page, body {
@@ -38,12 +42,23 @@ page, body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 14px;
   line-height: 1.5;
+  /* Prevent overscroll bounce on iOS */
+  overscroll-behavior: none;
 }
 
 #app, .taro_page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* Prevent text selection on Android for app-like feel */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Enable text selection only for input areas */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 /* 通用工具类 */
@@ -76,7 +91,44 @@ page, body {
   }
 }
 
-/* 滚动条样式 */
+/* Page transition animation */
+.taro_page {
+  animation: pageSlideIn 0.25s ease-out;
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Touch feedback - native-like tap highlight */
+.taro_page [class*="-card"],
+.taro_page [class*="-item"],
+.taro_page [class*="-link"],
+.taro_page button,
+.taro_page [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s ease;
+}
+
+.taro_page [class*="-card"]:active,
+.taro_page [class*="-item"]:active {
+  opacity: 0.85;
+}
+
+/* Smooth scrolling */
+.taro_page {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar styles */
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -92,10 +144,40 @@ page, body {
   background: #9ca3af;
 }
 
-/* Ant Design Mobile 适配 */
+/* Ant Design Mobile overrides for native feel */
+.adm-list-item-content-prefix,
+.adm-list-item-content-arrow {
+  transition: transform 0.15s ease;
+}
+
+.adm-button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.adm-card {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-sm) !important;
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+.adm-tabs-tab {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .adm-safe-area-top {
   --adm-safe-area-top: env(safe-area-inset-top);
 }
 .adm-safe-area-bottom {
   --adm-safe-area-bottom: env(safe-area-inset-bottom);
+}
+
+/* Global loading state */
+.page-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+  color: var(--color-text-tertiary);
 }

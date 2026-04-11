@@ -31,6 +31,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.24.0",
+    
     "@tarojs/components": "4.1.11",
     "@tarojs/helper": "4.1.11",
     "@tarojs/plugin-framework-react": "4.1.11",
@@ -69,7 +70,6 @@
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    
     "pod-install": "^0.2.0",
     "postcss": "^8.4.35",
     "react-refresh": "^0.14.0",

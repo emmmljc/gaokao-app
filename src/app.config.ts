@@ -1,5 +1,6 @@
 export default defineAppConfig({
   pages: [
+    'pages/welcome/index',
     'pages/home/index',
     'pages/login/index',
     'pages/register/index',
@@ -20,33 +21,39 @@ export default defineAppConfig({
     navigationBarTextStyle: 'white',
   },
   tabBar: {
-    color: '#999999',
+    custom: true,
+    color: '#8e8e93',
     selectedColor: '#4f46e5',
     backgroundColor: '#ffffff',
     borderStyle: 'white',
     list: [
       {
         pagePath: 'pages/home/index',
+        text: '首页',
         iconPath: 'assets/logo.png',
         selectedIconPath: 'assets/logo.png',
       },
       {
         pagePath: 'pages/school-list/index',
+        text: '院校',
         iconPath: 'assets/logo.png',
         selectedIconPath: 'assets/logo.png',
       },
       {
         pagePath: 'pages/score-analysis/index',
+        text: '分析',
         iconPath: 'assets/logo.png',
         selectedIconPath: 'assets/logo.png',
       },
       {
         pagePath: 'pages/recommend/index',
+        text: '推荐',
         iconPath: 'assets/logo.png',
         selectedIconPath: 'assets/logo.png',
       },
       {
         pagePath: 'pages/profile/index',
+        text: '我的',
         iconPath: 'assets/logo.png',
         selectedIconPath: 'assets/logo.png',
       },

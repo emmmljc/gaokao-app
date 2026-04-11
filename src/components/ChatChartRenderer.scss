@@ -1,0 +1,127 @@
+/* ChatChartRenderer Styles - Taro Mobile */
+
+.chat-rich-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-text-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-rich-paragraph {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text-main);
+}
+
+.chat-markdown-fallback {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Chart Card */
+.chat-chart-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.chart-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.chart-card-subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.chart-container {
+  width: 100%;
+  min-height: 200px;
+}
+
+/* Simple Table Styles */
+.chart-table-scroll {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.chart-table {
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.chart-table-header {
+  display: flex;
+  flex-direction: row;
+  background: var(--color-fill-1);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chart-table-row {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chart-table-row:last-child {
+  border-bottom: none;
+}
+
+.chart-table-cell {
+  flex: 1;
+  min-width: 80px;
+  padding: 10px 12px;
+  border-right: 1px solid var(--color-border);
+}
+
+.chart-table-cell:last-child {
+  border-right: none;
+}
+
+.chart-table-header-cell {
+  background: var(--color-fill-1);
+  font-weight: 600;
+}
+
+.chart-table-text {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-text-main);
+  word-break: break-word;
+}
+
+.chart-table-more {
+  padding: 8px 12px;
+  background: var(--color-fill-1);
+  text-align: center;
+}
+
+.chart-table-more-text {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}
+
+/* Tag override for antd-mobile */
+.adm-tag {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
