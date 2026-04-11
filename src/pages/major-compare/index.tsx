@@ -9,7 +9,6 @@ import {
   Popup,
   Tag,
   Empty,
-  Progress,
   Toast,
   DotLoading,
 } from 'antd-mobile'
@@ -52,7 +51,51 @@ const MAJOR_FAMILIES: MajorFamilyOption[] = [
 ]
 
 const SUBJECT_TYPES = ['物理类', '历史类']
-const SCHOOL_LEVELS = ['985', '211', '双一流', '普通本科']
+const INSUFFICIENT_SAMPLE_LABEL = '样本不足'
+const MIN_SAMPLE_YEARS = 2
+
+// Helper functions
+function truncateText(value: string, maxLength: number): string {
+  return value.length > maxLength ? `${value.slice(0, maxLength)}...` : value
+}
+
+function formatTooltipSeriesLabel(schoolName: string, matchedMajorName?: string): string {
+  if (!matchedMajorName) {
+    return schoolName
+  }
+  return `${schoolName}（${truncateText(matchedMajorName, 10)}）`
+}
+
+function isInsufficientSample(record: MajorComparisonSchoolRecord): boolean {
+  return record.trendLabel === INSUFFICIENT_SAMPLE_LABEL
+    || record.availableYearCount < MIN_SAMPLE_YEARS
+}
+
+function compareByRankAsc(a: number | null | undefined, b: number | null | undefined): number {
+  if (a == null) {
+    return 1
+  }
+  if (b == null) {
+    return -1
+  }
+  return a - b
+}
+
+function sortSchoolRecords(records: MajorComparisonSchoolRecord[]): MajorComparisonSchoolRecord[] {
+  return [...records].sort((a, b) => {
+    const insufficientDiff = Number(isInsufficientSample(a)) - Number(isInsufficientSample(b))
+    if (insufficientDiff !== 0) {
+      return insufficientDiff
+    }
+
+    const latestRankDiff = compareByRankAsc(a.latestMinRank, b.latestMinRank)
+    if (latestRankDiff !== 0) {
+      return latestRankDiff
+    }
+
+    return compareByRankAsc(a.averageMinRank, b.averageMinRank)
+  })
+}
 
 export default function MajorComparePage() {
   const [loading, setLoading] = useState(false)
@@ -63,7 +106,6 @@ export default function MajorComparePage() {
   const [selectedFamily, setSelectedFamily] = useState<string>()
   const [subjectType, setSubjectType] = useState<string>('物理类')
   const [rankPosition, setRankPosition] = useState<string>('')
-  const [schoolLevel, setSchoolLevel] = useState<string | undefined>(undefined)
 
   // Result State
   const [result, setResult] = useState<MajorComparisonResponse | null>(null)
@@ -71,11 +113,15 @@ export default function MajorComparePage() {
   // Picker visibility states
   const [familyPickerVisible, setFamilyPickerVisible] = useState(false)
   const [subjectPickerVisible, setSubjectPickerVisible] = useState(false)
-  const [levelPickerVisible, setLevelPickerVisible] = useState(false)
 
   const selectedFamilyOption = useMemo(
     () => familyOptions.find((item) => item.value === selectedFamily),
     [familyOptions, selectedFamily],
+  )
+
+  const sortedResultRecords = useMemo(
+    () => sortSchoolRecords(result?.records ?? []),
+    [result],
   )
 
   // Resolve representative majorId for each allowed family on mount
@@ -149,8 +195,6 @@ export default function MajorComparePage() {
         rankPosition: rankNum,
       }
 
-      if (schoolLevel) params.schoolLevel = schoolLevel
-
       const response = await majorCompareApi.compare(params)
       setResult(response)
 
@@ -168,18 +212,6 @@ export default function MajorComparePage() {
     } finally {
       setLoading(false)
     }
-  }
-
-  const getStabilityColor = (score: number): string => {
-    if (score > 80) return '#10b981'
-    if (score > 60) return '#f59e0b'
-    return '#ef4444'
-  }
-
-  const getRiskColor = (score: number): string => {
-    if (score > 60) return '#ef4444'
-    if (score > 30) return '#f59e0b'
-    return '#10b981'
   }
 
   const getTrendTagColor = (trendLabel: string): string => {
@@ -236,19 +268,6 @@ export default function MajorComparePage() {
             />
           </View>
 
-          <View className="filter-row">
-            <Text className="filter-label">院校层级</Text>
-            <View
-              className="filter-picker-trigger"
-              onClick={() => setLevelPickerVisible(true)}
-            >
-              <Text className="filter-picker-value">
-                {schoolLevel || '全部层级'}
-              </Text>
-              <Text className="filter-picker-arrow">▼</Text>
-            </View>
-          </View>
-
           <Button
             color="primary"
             block
@@ -291,23 +310,6 @@ export default function MajorComparePage() {
               setSubjectPickerVisible(false)
             }}
             onCancel={() => setSubjectPickerVisible(false)}
-          />
-        </Popup>
-
-        {/* School Level Picker Popup */}
-        <Popup
-          visible={levelPickerVisible}
-          onMaskClick={() => setLevelPickerVisible(false)}
-          bodyStyle={{ height: '40vh' }}
-        >
-          <Picker
-            columns={[SCHOOL_LEVELS.map(l => ({ label: l, value: l }))]}
-            value={schoolLevel ? [schoolLevel] : undefined}
-            onConfirm={(val) => {
-              setSchoolLevel(val?.[0] as string | undefined)
-              setLevelPickerVisible(false)
-            }}
-            onCancel={() => setLevelPickerVisible(false)}
           />
         </Popup>
 
@@ -385,108 +387,64 @@ export default function MajorComparePage() {
             {/* School Comparison Cards */}
             <View className="schools-section">
               <Text className="section-title">院校对比明细</Text>
-              <Text className="section-desc">按最新录取位次排序</Text>
 
-              {result.records.map((school: MajorComparisonSchoolRecord) => (
-                <Card key={school.seriesKey} className="school-card">
-                  {/* School Header */}
-                  <View className="school-header">
-                    <View className="school-info-left">
-                      <Text className="school-name">{school.schoolName}</Text>
-                      <View className="school-tags">
-                        {school.schoolLevel && (
-                          <Tag color="primary" className="school-tag">{school.schoolLevel}</Tag>
+              {sortedResultRecords.map((school: MajorComparisonSchoolRecord) => (
+                <View key={school.seriesKey} className="school-card">
+                  <View className="school-row">
+                    {/* Left: Basic Info */}
+                    <View className="school-info-col">
+                      <View className="school-header-compact">
+                        <Text className="school-name">{school.schoolName}</Text>
+                        <View className="school-tags">
+                          {school.schoolLevel && <Tag color="primary">{school.schoolLevel}</Tag>}
+                          {school.city && <Tag>{school.city}</Tag>}
+                          <Tag color="cyan">{school.subjectType}</Tag>
+                        </View>
+                      </View>
+                      <Text className="school-meta-compact">
+                        匹配: {school.majorFamilyName} ({school.matchedMajorName}) | 专业组: {school.groupName}
+                      </Text>
+                    </View>
+
+                    {/* Right: Tags and Stats */}
+                    <View className="school-stats-col">
+                      <View className="school-tags-right">
+                        {school.suitabilityBand && (
+                          <Tag
+                            color="default"
+                            style={{
+                              backgroundColor: SUITABILITY_COLORS[school.suitabilityBand] || '#default',
+                              color: '#fff',
+                              '--border-radius': '12px',
+                            }}
+                          >
+                            {school.suitabilityBand}
+                          </Tag>
                         )}
-                        {school.city && (
-                          <Tag className="school-tag">{school.city}</Tag>
+                        {school.trendLabel !== INSUFFICIENT_SAMPLE_LABEL && (
+                          <Tag color={getTrendTagColor(school.trendLabel)}>
+                            {school.trendLabel}
+                          </Tag>
                         )}
-                        <Tag color="cyan" className="school-tag">{school.subjectType}</Tag>
+                      </View>
+
+                      <View className="score-stats-compact">
+                        <View className="stat-compact">
+                          <Text className="stat-label">最新:</Text>
+                          <Text className="stat-value highlight">{school.latestMinRank}</Text>
+                        </View>
+                        <View className="stat-compact">
+                          <Text className="stat-label">三年均:</Text>
+                          <Text className="stat-value">{Math.round(school.averageMinRank)}</Text>
+                        </View>
+                        <View className="stat-compact">
+                          <Text className="stat-label">波动:</Text>
+                          <Text className="stat-value">{school.rankVolatility}</Text>
+                        </View>
                       </View>
                     </View>
-                    <View className="school-info-right">
-                      {school.suitabilityBand && (
-                        <Tag
-                          color="default"
-                          style={{
-                            backgroundColor: SUITABILITY_COLORS[school.suitabilityBand] || '#default',
-                            color: '#fff',
-                          }}
-                          className="suitability-tag"
-                        >
-                          {school.suitabilityBand}
-                        </Tag>
-                      )}
-                      <Tag color={getTrendTagColor(school.trendLabel)} className="trend-tag">
-                        {school.trendLabel}
-                      </Tag>
-                    </View>
                   </View>
-
-                  {/* School Meta */}
-                  <View className="school-meta">
-                    <Text className="meta-text">匹配专业: {school.majorFamilyName}</Text>
-                    <Text className="meta-text">具体专业: {school.matchedMajorName}</Text>
-                  </View>
-
-                  {/* Stats Grid */}
-                  <View className="stats-grid">
-                    <View className="stat-item">
-                      <Text className="stat-label">最新最低位次</Text>
-                      <Text className="stat-value highlight">{school.latestMinRank}</Text>
-                    </View>
-                    <View className="stat-item">
-                      <Text className="stat-label">三年平均位次</Text>
-                      <Text className="stat-value">{Math.round(school.averageMinRank)}</Text>
-                    </View>
-                    <View className="stat-item">
-                      <Text className="stat-label">位次波动区间</Text>
-                      <Text className="stat-value">{school.rankVolatility}</Text>
-                    </View>
-                    <View className="stat-item">
-                      <Text className="stat-label">数据年数</Text>
-                      <Text className="stat-value">{school.availableYearCount}年</Text>
-                    </View>
-                  </View>
-
-                  {/* Progress Bars */}
-                  <View className="progress-section">
-                    <View className="progress-item">
-                      <View className="progress-header">
-                        <Text className="progress-label">稳定性评分</Text>
-                        <Text
-                          className="progress-value"
-                          style={{ color: getStabilityColor(school.stabilityScore) }}
-                        >
-                          {school.stabilityScore.toFixed(1)}
-                        </Text>
-                      </View>
-                      <Progress
-                        percent={school.stabilityScore}
-                        style={{
-                          '--fill-color': getStabilityColor(school.stabilityScore),
-                        }}
-                      />
-                    </View>
-
-                    <View className="progress-item">
-                      <View className="progress-header">
-                        <Text className="progress-label">报考风险指数</Text>
-                        <Text
-                          className="progress-value"
-                          style={{ color: getRiskColor(school.riskScore) }}
-                        >
-                          {school.riskScore.toFixed(1)}
-                        </Text>
-                      </View>
-                      <Progress
-                        percent={Math.min(100, school.riskScore)}
-                        style={{
-                          '--fill-color': getRiskColor(school.riskScore),
-                        }}
-                      />
-                    </View>
-                  </View>
-                </Card>
+                </View>
               ))}
             </View>
 

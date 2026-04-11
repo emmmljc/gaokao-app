@@ -238,34 +238,53 @@
 .schools-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-.school-card {
   background-color: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 16px;
-  margin-bottom: 12px;
 }
 
-.school-header {
+// Flat list card style (matching frontend)
+.school-card {
+  margin-bottom: 0;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 0;
+  transition: background-color 0.2s;
+}
+
+.school-card:last-child {
+  border-bottom: none;
+}
+
+.school-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 16px;
 }
 
-.school-info-left {
+.school-info-col {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.school-header-compact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .school-name {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: #0f172a;
+  white-space: nowrap;
 }
 
 .school-tags {
@@ -274,56 +293,37 @@
   flex-wrap: wrap;
 }
 
-.school-tag {
-  font-size: 12px;
-}
-
-.school-info-right {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-end;
-}
-
-.suitability-tag {
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 12px;
-}
-
-.trend-tag {
-  font-size: 12px;
-}
-
-.school-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 12px;
+.school-meta-compact {
   font-size: 12px;
   color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.meta-text {
-  font-size: 12px;
-  color: #64748b;
-}
-
-.stats-grid {
+.school-stats-col {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 12px;
-  background-color: #f8fafc;
-  border-radius: 8px;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
 }
 
-.stat-item {
+.school-tags-right {
   display: flex;
-  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.score-stats-compact {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.stat-compact {
+  display: flex;
+  align-items: center;
   gap: 4px;
-  min-width: 80px;
 }
 
 .stat-label {
@@ -332,7 +332,7 @@
 }
 
 .stat-value {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #0f172a;
 }
@@ -341,34 +341,20 @@
   color: #4f46e5;
 }
 
-.progress-section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.progress-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.progress-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.progress-label {
-  font-size: 12px;
-  color: #64748b;
-}
-
-.progress-value {
-  font-size: 12px;
-  font-weight: 600;
-}
-
 .page-footer {
   height: 40px;
+}
+
+// Responsive styles for mobile
+@media (max-width: 600px) {
+  .school-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .school-stats-col {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
