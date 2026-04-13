@@ -6,7 +6,8 @@ import './index.scss'
 const TAB_LIST = [
   { pagePath: '/pages/home/index', text: '首页' },
   { pagePath: '/pages/school-list/index', text: '院校' },
-  { pagePath: '/pages/score-analysis/index', text: '分析' },
+  { pagePath: '/pages/major-compare/index', text: '专业' },
+  { pagePath: '/pages/score-analysis/index', text: '位次' },
   { pagePath: '/pages/recommend/index', text: '推荐' },
   { pagePath: '/pages/profile/index', text: '我的' },
 ]
@@ -70,6 +71,27 @@ function AnalysisIcon({ active }: { active: boolean }) {
   )
 }
 
+function MajorIcon({ active }: { active: boolean }) {
+  const color = active ? 'var(--color-primary)' : '#8e8e93'
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      <line x1="9" y1="7" x2="16" y2="7" />
+      <line x1="9" y1="11" x2="14" y2="11" />
+    </svg>
+  )
+}
+
 function RecommendIcon({ active }: { active: boolean }) {
   const color = active ? 'var(--color-primary)' : '#8e8e93'
   return (
@@ -115,6 +137,8 @@ function TabIcon({ pagePath, active }: { pagePath: string; active: boolean }) {
       return <HomeIcon active={active} />
     case '/pages/school-list/index':
       return <SchoolIcon active={active} />
+    case '/pages/major-compare/index':
+      return <MajorIcon active={active} />
     case '/pages/score-analysis/index':
       return <AnalysisIcon active={active} />
     case '/pages/recommend/index':

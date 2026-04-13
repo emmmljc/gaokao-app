@@ -40,8 +40,14 @@ export default defineAppConfig({
         selectedIconPath: 'assets/logo.png',
       },
       {
+        pagePath: 'pages/major-compare/index',
+        text: '专业',
+        iconPath: 'assets/logo.png',
+        selectedIconPath: 'assets/logo.png',
+      },
+      {
         pagePath: 'pages/score-analysis/index',
-        text: '分析',
+        text: '位次',
         iconPath: 'assets/logo.png',
         selectedIconPath: 'assets/logo.png',
       },
