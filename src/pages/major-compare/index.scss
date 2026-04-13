@@ -220,6 +220,12 @@
   padding: 16px;
 }
 
+.chart-wrapper {
+  margin-top: 12px;
+  width: 100%;
+  overflow: hidden;
+}
+
 .chart-placeholder {
   height: 200px;
   display: flex;
@@ -244,7 +250,7 @@
   padding: 16px;
 }
 
-// Flat list card style (matching frontend)
+// Flat list card style
 .school-card {
   margin-bottom: 0;
   border-radius: 0;
@@ -261,7 +267,7 @@
 .school-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
 }
 
@@ -301,33 +307,33 @@
   text-overflow: ellipsis;
 }
 
-.school-stats-col {
+.school-tags-col {
   display: flex;
-  align-items: center;
-  gap: 24px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
   flex-shrink: 0;
 }
 
-.school-tags-right {
+// Stats row
+.school-stats-row {
   display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.score-stats-compact {
-  display: flex;
-  gap: 16px;
-  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding: 10px 12px;
+  background-color: #f8fafc;
+  border-radius: 8px;
 }
 
 .stat-compact {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
 }
 
 .stat-label {
-  font-size: 12px;
+  font-size: 11px;
   color: #64748b;
 }
 
@@ -341,8 +347,51 @@
   color: #4f46e5;
 }
 
+// Progress section (stability & risk scores)
+.progress-section {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.progress-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.progress-score {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.progress-bar-wrapper {
+  height: 6px;
+  background-color: #f1f5f9;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
 .page-footer {
-  height: 40px;
+  height: 100px; /* Space for tabBar */
 }
 
 // Responsive styles for mobile
@@ -353,8 +402,18 @@
     gap: 8px;
   }
 
-  .school-stats-col {
+  .school-tags-col {
+    flex-direction: row;
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
+  }
+
+  .school-stats-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .stat-compact {
+    flex: 0 0 45%;
   }
 }

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import {
@@ -11,7 +11,10 @@ import {
   Empty,
   Toast,
   DotLoading,
+  ProgressBar,
+  PullToRefresh,
 } from 'antd-mobile'
+import ReactECharts from 'echarts-for-react'
 import { majorCompareApi } from '@/api/majorCompare'
 import { majorApi } from '@/api/major'
 import type {
@@ -20,6 +23,7 @@ import type {
   MajorComparisonSchoolRecord,
   Major,
 } from '@/types'
+import CustomTabBar from '@/custom-tab-bar'
 import './index.scss'
 
 // Suitability band color mapping
@@ -51,6 +55,13 @@ const MAJOR_FAMILIES: MajorFamilyOption[] = [
 ]
 
 const SUBJECT_TYPES = ['物理类', '历史类']
+const SCHOOL_LEVELS = [
+  { label: '全部层级', value: '' },
+  { label: '985', value: '985' },
+  { label: '211', value: '211' },
+  { label: '双一流', value: '双一流' },
+  { label: '普通本科', value: '普通本科' },
+]
 const INSUFFICIENT_SAMPLE_LABEL = '样本不足'
 const MIN_SAMPLE_YEARS = 2
 
@@ -59,39 +70,24 @@ function truncateText(value: string, maxLength: number): string {
   return value.length > maxLength ? `${value.slice(0, maxLength)}...` : value
 }
 
-function formatTooltipSeriesLabel(schoolName: string, matchedMajorName?: string): string {
-  if (!matchedMajorName) {
-    return schoolName
-  }
-  return `${schoolName}（${truncateText(matchedMajorName, 10)}）`
-}
-
 function isInsufficientSample(record: MajorComparisonSchoolRecord): boolean {
   return record.trendLabel === INSUFFICIENT_SAMPLE_LABEL
     || record.availableYearCount < MIN_SAMPLE_YEARS
 }
 
 function compareByRankAsc(a: number | null | undefined, b: number | null | undefined): number {
-  if (a == null) {
-    return 1
-  }
-  if (b == null) {
-    return -1
-  }
+  if (a == null) return 1
+  if (b == null) return -1
   return a - b
 }
 
 function sortSchoolRecords(records: MajorComparisonSchoolRecord[]): MajorComparisonSchoolRecord[] {
   return [...records].sort((a, b) => {
     const insufficientDiff = Number(isInsufficientSample(a)) - Number(isInsufficientSample(b))
-    if (insufficientDiff !== 0) {
-      return insufficientDiff
-    }
+    if (insufficientDiff !== 0) return insufficientDiff
 
     const latestRankDiff = compareByRankAsc(a.latestMinRank, b.latestMinRank)
-    if (latestRankDiff !== 0) {
-      return latestRankDiff
-    }
+    if (latestRankDiff !== 0) return latestRankDiff
 
     return compareByRankAsc(a.averageMinRank, b.averageMinRank)
   })
@@ -106,6 +102,7 @@ export default function MajorComparePage() {
   const [selectedFamily, setSelectedFamily] = useState<string>()
   const [subjectType, setSubjectType] = useState<string>('物理类')
   const [rankPosition, setRankPosition] = useState<string>('')
+  const [schoolLevel, setSchoolLevel] = useState<string>('')
 
   // Result State
   const [result, setResult] = useState<MajorComparisonResponse | null>(null)
@@ -113,6 +110,7 @@ export default function MajorComparePage() {
   // Picker visibility states
   const [familyPickerVisible, setFamilyPickerVisible] = useState(false)
   const [subjectPickerVisible, setSubjectPickerVisible] = useState(false)
+  const [schoolLevelPickerVisible, setSchoolLevelPickerVisible] = useState(false)
 
   const selectedFamilyOption = useMemo(
     () => familyOptions.find((item) => item.value === selectedFamily),
@@ -193,6 +191,7 @@ export default function MajorComparePage() {
         expandRelatedMajors: true,
         limit: 20,
         rankPosition: rankNum,
+        ...(schoolLevel ? { schoolLevel } : {}),
       }
 
       const response = await majorCompareApi.compare(params)
@@ -220,8 +219,110 @@ export default function MajorComparePage() {
     return 'default'
   }
 
+  const getScoreColor = (score: number, thresholds: [number, number] = [60, 80]): string => {
+    if (score >= thresholds[1]) return '#10b981'
+    if (score >= thresholds[0]) return '#f59e0b'
+    return '#ef4444'
+  }
+
+  // ECharts option for trend chart
+  const chartOption = useMemo(() => {
+    if (!result || result.records.length === 0) return null
+
+    const years = new Set<number>()
+    result.records.forEach(record => {
+      record.yearly.forEach(y => years.add(y.year))
+    })
+
+    const sortedYears = Array.from(years).sort((a, b) => a - b)
+
+    // Show top 10 schools by latest min rank
+    const sortedRecords = [...result.records]
+      .sort((a, b) => a.latestMinRank - b.latestMinRank)
+      .slice(0, 10)
+
+    const series = sortedRecords.map(record => {
+      const data = sortedYears.map(year => {
+        const yearData = record.yearly.find(y => y.year === year)
+        return yearData ? yearData.minRank : null
+      })
+
+      return {
+        name: truncateText(record.schoolName, 8),
+        type: 'line',
+        data,
+        symbolSize: 6,
+        lineStyle: { width: 2 },
+        connectNulls: true,
+        emphasis: { focus: 'series' as const },
+      }
+    })
+
+    return {
+      title: {
+        text: `${result.majorFamilyName || result.normalizedMajorName} - 历年最低位次 (Top 10)`,
+        left: 'center',
+        textStyle: { color: '#0f172a', fontSize: 13, fontWeight: 600 },
+      },
+      tooltip: {
+        trigger: 'axis' as const,
+        confine: true,
+        textStyle: { fontSize: 11 },
+      },
+      legend: {
+        type: 'scroll' as const,
+        bottom: 0,
+        padding: [4, 10],
+        textStyle: { fontSize: 10 },
+        itemWidth: 12,
+        itemHeight: 8,
+      },
+      grid: {
+        top: 40,
+        right: 16,
+        bottom: 50,
+        left: 50,
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category' as const,
+        boundaryGap: false,
+        data: sortedYears.map(String),
+        axisLine: { lineStyle: { color: '#e2e8f0' } },
+        axisLabel: { color: '#64748b', fontSize: 10 },
+      },
+      yAxis: {
+        type: 'value' as const,
+        name: '位次',
+        nameTextStyle: { color: '#64748b', fontSize: 10 },
+        inverse: true,
+        axisLine: { show: false },
+        axisTick: { show: false },
+        splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } },
+        axisLabel: { color: '#64748b', fontSize: 10 },
+      },
+      series,
+    }
+  }, [result])
+
   return (
     <View className="major-compare-page">
+      <PullToRefresh onRefresh={async () => {
+        if (selectedFamilyOption?.majorId) {
+          try {
+            const params: MajorCompareParams = {
+              majorId: selectedFamilyOption.majorId,
+              subjectType,
+              expandRelatedMajors: true,
+              limit: 20,
+              ...(rankPosition ? { rankPosition: parseInt(rankPosition, 10) } : {}),
+              ...(schoolLevel ? { schoolLevel } : {}),
+            }
+            const response = await majorCompareApi.compare(params)
+            setResult(response)
+          } catch { /* silently ignore */ }
+        }
+      }}>
       <ScrollView scrollY className="major-compare-scroll">
         {/* Header */}
         <View className="page-header">
@@ -266,6 +367,19 @@ export default function MajorComparePage() {
               value={rankPosition}
               onChange={setRankPosition}
             />
+          </View>
+
+          <View className="filter-row">
+            <Text className="filter-label">院校层级</Text>
+            <View
+              className="filter-picker-trigger"
+              onClick={() => setSchoolLevelPickerVisible(true)}
+            >
+              <Text className="filter-picker-value">
+                {SCHOOL_LEVELS.find(l => l.value === schoolLevel)?.label || '全部层级'}
+              </Text>
+              <Text className="filter-picker-arrow">▼</Text>
+            </View>
           </View>
 
           <Button
@@ -313,6 +427,23 @@ export default function MajorComparePage() {
           />
         </Popup>
 
+        {/* School Level Picker Popup */}
+        <Popup
+          visible={schoolLevelPickerVisible}
+          onMaskClick={() => setSchoolLevelPickerVisible(false)}
+          bodyStyle={{ height: '40vh' }}
+        >
+          <Picker
+            columns={[SCHOOL_LEVELS.map(l => ({ label: l.label, value: l.value }))]}
+            value={[schoolLevel]}
+            onConfirm={(val) => {
+              setSchoolLevel(val?.[0] as string ?? '')
+              setSchoolLevelPickerVisible(false)
+            }}
+            onCancel={() => setSchoolLevelPickerVisible(false)}
+          />
+        </Popup>
+
         {/* Results Section */}
         {loading ? (
           <View className="loading-container">
@@ -328,7 +459,7 @@ export default function MajorComparePage() {
             {/* Summary Cards */}
             <View className="summary-section">
               <Text className="section-title">对比结论速览</Text>
-              
+
               <View className="summary-cards">
                 <View className="summary-card">
                   <Text className="summary-label">分析样本</Text>
@@ -374,12 +505,16 @@ export default function MajorComparePage() {
               </View>
             </View>
 
-            {/* Chart Placeholder */}
-            {result.records.length > 0 && (
+            {/* Chart Section */}
+            {chartOption && (
               <Card className="chart-card">
                 <Text className="section-title">历年位次走势</Text>
-                <View className="chart-placeholder">
-                  <Text className="chart-placeholder-text">图表功能暂未支持</Text>
+                <View className="chart-wrapper">
+                  <ReactECharts
+                    option={chartOption}
+                    style={{ height: '300px', width: '100%' }}
+                    opts={{ renderer: 'svg' }}
+                  />
                 </View>
               </Card>
             )}
@@ -406,41 +541,82 @@ export default function MajorComparePage() {
                       </Text>
                     </View>
 
-                    {/* Right: Tags and Stats */}
-                    <View className="school-stats-col">
-                      <View className="school-tags-right">
-                        {school.suitabilityBand && (
-                          <Tag
-                            color="default"
-                            style={{
-                              backgroundColor: SUITABILITY_COLORS[school.suitabilityBand] || '#default',
-                              color: '#fff',
-                              '--border-radius': '12px',
-                            }}
-                          >
-                            {school.suitabilityBand}
-                          </Tag>
-                        )}
-                        {school.trendLabel !== INSUFFICIENT_SAMPLE_LABEL && (
-                          <Tag color={getTrendTagColor(school.trendLabel)}>
-                            {school.trendLabel}
-                          </Tag>
-                        )}
-                      </View>
+                    {/* Right: Tags */}
+                    <View className="school-tags-col">
+                      {school.suitabilityBand && (
+                        <Tag
+                          color="default"
+                          style={{
+                            backgroundColor: SUITABILITY_COLORS[school.suitabilityBand] || '#999',
+                            color: '#fff',
+                            '--border-radius': '12px',
+                          }}
+                        >
+                          {school.suitabilityBand}
+                        </Tag>
+                      )}
+                      {school.trendLabel !== INSUFFICIENT_SAMPLE_LABEL && (
+                        <Tag color={getTrendTagColor(school.trendLabel)}>
+                          {school.trendLabel}
+                        </Tag>
+                      )}
+                    </View>
+                  </View>
 
-                      <View className="score-stats-compact">
-                        <View className="stat-compact">
-                          <Text className="stat-label">最新:</Text>
-                          <Text className="stat-value highlight">{school.latestMinRank}</Text>
-                        </View>
-                        <View className="stat-compact">
-                          <Text className="stat-label">三年均:</Text>
-                          <Text className="stat-value">{Math.round(school.averageMinRank)}</Text>
-                        </View>
-                        <View className="stat-compact">
-                          <Text className="stat-label">波动:</Text>
-                          <Text className="stat-value">{school.rankVolatility}</Text>
-                        </View>
+                  {/* Stats Row */}
+                  <View className="school-stats-row">
+                    <View className="stat-compact">
+                      <Text className="stat-label">最新位次</Text>
+                      <Text className="stat-value highlight">{school.latestMinRank}</Text>
+                    </View>
+                    <View className="stat-compact">
+                      <Text className="stat-label">三年均位</Text>
+                      <Text className="stat-value">{Math.round(school.averageMinRank)}</Text>
+                    </View>
+                    <View className="stat-compact">
+                      <Text className="stat-label">波动区间</Text>
+                      <Text className="stat-value">{school.rankVolatility}</Text>
+                    </View>
+                    <View className="stat-compact">
+                      <Text className="stat-label">数据年数</Text>
+                      <Text className="stat-value">{school.availableYearCount}年</Text>
+                    </View>
+                  </View>
+
+                  {/* Progress Bars: Stability & Risk */}
+                  <View className="progress-section">
+                    <View className="progress-item">
+                      <View className="progress-label-row">
+                        <Text className="progress-label">稳定性评分</Text>
+                        <Text className="progress-score" style={{ color: getScoreColor(school.stabilityScore) }}>
+                          {school.stabilityScore.toFixed(1)}
+                        </Text>
+                      </View>
+                      <View className="progress-bar-wrapper">
+                        <View
+                          className="progress-bar-fill"
+                          style={{
+                            width: `${Math.min(100, school.stabilityScore)}%`,
+                            backgroundColor: getScoreColor(school.stabilityScore),
+                          }}
+                        />
+                      </View>
+                    </View>
+                    <View className="progress-item">
+                      <View className="progress-label-row">
+                        <Text className="progress-label">报考风险</Text>
+                        <Text className="progress-score" style={{ color: getScoreColor(school.riskScore, [30, 60]) }}>
+                          {school.riskScore.toFixed(1)}
+                        </Text>
+                      </View>
+                      <View className="progress-bar-wrapper">
+                        <View
+                          className="progress-bar-fill risk-bar"
+                          style={{
+                            width: `${Math.min(100, school.riskScore)}%`,
+                            backgroundColor: getScoreColor(school.riskScore, [30, 60]),
+                          }}
+                        />
                       </View>
                     </View>
                   </View>
@@ -452,6 +628,8 @@ export default function MajorComparePage() {
           </View>
         )}
       </ScrollView>
+      </PullToRefresh>
+      <CustomTabBar />
     </View>
   )
 }
