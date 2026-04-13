@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { SearchBar, Tag, Button, Empty, DotLoading, Picker, Popup } from 'antd-mobile'
+import { SearchBar, Tag, Button, Empty, DotLoading, Picker, Popup, PullToRefresh } from 'antd-mobile'
 import { schoolApi } from '@/api/school'
 import type { School } from '@/types'
 import { useSwipeTab } from '@/hooks/useSwipeTab'
@@ -72,6 +72,12 @@ export default function SchoolListPage() {
 
   return (
     <View className="school-list-page" {...swipeHandlers}>
+      <PullToRefresh onRefresh={async () => {
+        try {
+          const data = await schoolApi.list({ keyword, province, schoolType })
+          setSchools(data)
+        } catch { /* silently ignore refresh errors */ }
+      }}>
       {/* Search Section */}
       <View className="search-section">
         <SearchBar
@@ -249,6 +255,7 @@ export default function SchoolListPage() {
           </>
         )}
       </View>
+      </PullToRefresh>
       <CustomTabBar />
     </View>
   )

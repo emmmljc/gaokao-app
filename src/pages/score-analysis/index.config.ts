@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '分数分析',
+  navigationBarTitleText: '位次分析',
 }

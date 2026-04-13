@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { Card, Button, Input, Picker, Toast } from 'antd-mobile'
+import { Card, Button, Input, Picker, Toast, PullToRefresh } from 'antd-mobile'
 import { scoreApi } from '@/api/score'
 import type { ScoreRanking, ScoreToRankResponse } from '@/types'
 import { useSwipeTab } from '@/hooks/useSwipeTab'
@@ -77,6 +77,18 @@ export default function ScoreAnalysisPage() {
 
   return (
     <View className="score-analysis-page" {...swipeHandlers}>
+      <PullToRefresh onRefresh={async () => {
+        if (scoreRankings.length > 0 || scoreToRankResult) {
+          try {
+            const data = await scoreApi.list({ year, subjectType })
+            setScoreRankings(data)
+            if (scoreToRankResult) {
+              const result = await scoreApi.scoreToRank({ year, subjectType, score: scoreToRankResult.score })
+              setScoreToRankResult(result)
+            }
+          } catch { /* silently ignore */ }
+        }
+      }}>
       <ScrollView scrollY className="score-analysis-scroll">
         {/* Header */}
         <View className="page-header">
@@ -268,6 +280,7 @@ export default function ScoreAnalysisPage() {
 
         <View className="page-footer" />
       </ScrollView>
+      </PullToRefresh>
       <CustomTabBar />
     </View>
   )

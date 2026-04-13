@@ -119,6 +119,7 @@ export default function WelcomePage() {
           </Button>
           <Button
             block
+            fill="none"
             size="large"
             className="btn-register"
             onClick={handleRegister}
