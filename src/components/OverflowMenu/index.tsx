@@ -4,8 +4,8 @@ import Taro from '@tarojs/taro'
 import './index.scss'
 
 const HIDDEN_ITEMS = [
-  { pagePath: '/pages/school-list/index', text: '院校查询', icon: '🏫' },
-  { pagePath: '/pages/score-analysis/index', text: '位次分析', icon: '📊' },
+  { pagePath: '/pages/school-list/index', text: '院校查询', iconKey: 'school' },
+  { pagePath: '/pages/score-analysis/index', text: '位次分析', iconKey: 'analysis' },
 ]
 
 export default function OverflowMenu() {
@@ -22,20 +22,7 @@ export default function OverflowMenu() {
         className="overflow-trigger"
         onClick={() => setOpen(!open)}
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#1e293b"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <line x1="4" y1="6" x2="20" y2="6" />
-          <line x1="4" y1="12" x2="20" y2="12" />
-          <line x1="4" y1="18" x2="20" y2="18" />
-        </svg>
+        <View className="icon-hamburger" />
       </View>
 
       {open && (
@@ -47,7 +34,7 @@ export default function OverflowMenu() {
                 className="overflow-dropdown-item"
                 onClick={() => handleNavigate(item.pagePath)}
               >
-                <Text className="overflow-dropdown-icon">{item.icon}</Text>
+                <View className={`overflow-dropdown-icon icon-${item.iconKey}`} />
                 <Text className="overflow-dropdown-text">{item.text}</Text>
               </View>
             ))}
