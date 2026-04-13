@@ -2,7 +2,7 @@
 
 .home-container {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--color-bg-base);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   padding-bottom: 120px;
 }
@@ -25,7 +25,7 @@
 .home-top-bar-title {
   font-size: 17px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-text-main);
   letter-spacing: -0.01em;
 }
 
@@ -35,7 +35,7 @@
 .hero-section {
   padding: 56px 24px 32px;
   text-align: center;
-  background: #f8fafc;
+  background: var(--color-bg-base);
 }
 
 .hero-content {
@@ -48,7 +48,7 @@
   font-size: 28px;
   font-weight: 700;
   line-height: 1.25;
-  color: #0f172a;
+  color: var(--color-text-main);
   letter-spacing: -0.02em;
   margin-bottom: 4px;
 }
@@ -101,18 +101,18 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #f8fafc;
+  background: var(--color-bg-base);
 }
 
 .trust-item {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--color-text-tertiary);
   font-weight: 500;
 }
 
 .trust-dot {
   font-size: 12px;
-  color: #cbd5e1;
+  color: var(--color-border-hover);
   margin: 0 2px;
 }
 
@@ -121,7 +121,7 @@
    ========================================= */
 .quick-entry-section {
   padding: 16px 16px 24px;
-  background: #f8fafc;
+  background: var(--color-bg-base);
 }
 
 .quick-entry-grid {
@@ -138,13 +138,13 @@
   padding: 16px 8px;
   background: #ffffff;
   border-radius: 12px;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--color-border);
   transition: all 0.15s ease;
 }
 
 .quick-entry-item:active {
   transform: scale(0.96);
-  background: #f8fafc;
+  background: var(--color-bg-base);
   border-color: rgba(79, 70, 229, 0.2);
 }
 
@@ -157,11 +157,41 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 8px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 22px 22px;
 }
 
 .quick-entry-label {
   font-size: 12px;
   font-weight: 500;
-  color: #0f172a;
+  color: var(--color-text-main);
   letter-spacing: -0.01em;
+}
+
+/* =========================================
+   QUICK ENTRY ICONS - SVG Data URI Background
+   ========================================= */
+.icon-school {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 10v6M2 10l10-5 10 5-10 5z'/%3E%3Cpath d='M6 12v5c0 2 2 3 6 3s6-1 6-3v-5'/%3E%3C/svg%3E");
+}
+
+.icon-major {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20'/%3E%3Cpath d='M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'/%3E%3Cline x1='9' y1='7' x2='16' y2='7'/%3E%3Cline x1='9' y1='11' x2='14' y2='11'/%3E%3C/svg%3E");
+}
+
+.icon-score {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='20' x2='18' y2='10'/%3E%3Cline x1='12' y1='20' x2='12' y2='4'/%3E%3Cline x1='6' y1='20' x2='6' y2='14'/%3E%3C/svg%3E");
+}
+
+.icon-ai {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6'/%3E%3Cpath d='M10 22h4'/%3E%3Cpath d='M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14'/%3E%3C/svg%3E");
+}
+
+.icon-chat {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E");
+}
+
+.icon-profile {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M20 21a8 8 0 1 0-16 0'/%3E%3C/svg%3E");
 }

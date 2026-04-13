@@ -7,17 +7,17 @@ import './index.scss'
 
 const features = [
   {
-    icon: '🎯',
+    key: 'target',
     title: 'AI智能推荐',
     desc: '个性化冲稳保方案',
   },
   {
-    icon: '🏫',
+    key: 'school',
     title: '3000+院校库',
     desc: '全面数据查询',
   },
   {
-    icon: '📊',
+    key: 'chart',
     title: '多维分数分析',
     desc: '精准位次换算',
   },
@@ -76,9 +76,7 @@ export default function WelcomePage() {
       <View className="welcome-content">
         {/* Logo area */}
         <View className="welcome-logo animate-fade-up" style={{ animationDelay: '0.1s' }}>
-          <View className="logo-icon">
-            <Text className="logo-emoji">🎓</Text>
-          </View>
+          <View className="logo-icon icon-graduation-cap" />
         </View>
 
         {/* App name and tagline */}
@@ -91,13 +89,11 @@ export default function WelcomePage() {
         <View className="welcome-features animate-fade-up" style={{ animationDelay: '0.4s' }}>
           {features.map((feature, index) => (
             <View
-              key={feature.title}
+              key={feature.key}
               className="feature-item"
               style={{ animationDelay: `${0.5 + index * 0.1}s` }}
             >
-              <View className="feature-icon-wrapper">
-                <Text className="feature-icon">{feature.icon}</Text>
-              </View>
+              <View className={`feature-icon-wrapper icon-${feature.key}`} />
               <View className="feature-text">
                 <Text className="feature-title">{feature.title}</Text>
                 <Text className="feature-desc">{feature.desc}</Text>

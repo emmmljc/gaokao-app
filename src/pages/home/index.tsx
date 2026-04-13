@@ -11,42 +11,36 @@ import './index.scss'
 const quickEntries = [
   {
     key: 'school',
-    icon: '🏫',
     title: '院校查询',
     path: '/pages/school-list/index',
     isTab: true,
   },
   {
     key: 'major',
-    icon: '📚',
     title: '专业分析',
     path: '/pages/major-compare/index',
     isTab: true,
   },
   {
     key: 'score',
-    icon: '📊',
     title: '分数分析',
     path: '/pages/score-analysis/index',
     isTab: true,
   },
   {
     key: 'ai',
-    icon: '💡',
     title: 'AI推荐',
     path: '/pages/recommend/index',
     isTab: true,
   },
   {
     key: 'chat',
-    icon: '🤖',
     title: '智能填表',
     path: '/pages/chat/index',
     isTab: false,
   },
   {
     key: 'profile',
-    icon: '👤',
     title: '个人档案',
     path: '/pages/profile/index',
     isTab: true,
@@ -116,9 +110,7 @@ export default function HomePage() {
                 className="quick-entry-item"
                 onClick={() => handleNavigate(entry.path, entry.isTab)}
               >
-                <View className="quick-entry-icon">
-                  <Text>{entry.icon}</Text>
-                </View>
+                <View className={`quick-entry-icon icon-${entry.key}`} />
                 <Text className="quick-entry-label">{entry.title}</Text>
               </View>
             ))}
