@@ -107,7 +107,8 @@ export default function RecommendPage() {
   )
 
   useEffect(() => {
-    (async () => {
+    if (!user) return
+    ;(async () => {
       try {
         setLoading(true)
 
@@ -151,7 +152,29 @@ export default function RecommendPage() {
         setLoading(false)
       }
     })()
-  }, [])
+  }, [user])
+
+  // Auth gate: show login prompt if not authenticated
+  if (!user) {
+    return (
+      <View className='recommend-page-scroll'>
+        <View className='auth-gate'>
+          <View className='auth-gate-icon'>✨</View>
+          <Text className='auth-gate-title'>请先登录</Text>
+          <Text className='auth-gate-desc'>登录后即可查看智能推荐结果，获取冲稳保志愿方案</Text>
+          <View className='auth-gate-actions'>
+            <Button block color='primary' size='large' onClick={() => Taro.navigateTo({ url: '/pages/login/index' })} className='auth-gate-btn'>
+              登录
+            </Button>
+            <Button block fill='none' size='large' onClick={() => Taro.navigateTo({ url: '/pages/register/index' })} className='auth-gate-btn auth-gate-btn-secondary'>
+              注册新账号
+            </Button>
+          </View>
+        </View>
+        <CustomTabBar />
+      </View>
+    )
+  }
 
   const togglePortfolioDescription = useCallback((style: string) => {
     setExpandedPortfolioDescriptions((prev) => ({

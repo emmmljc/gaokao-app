@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { View, Text, Picker as TaroPicker } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import { Form, Input, Button, Toast, Card, DotLoading, PullToRefresh } from 'antd-mobile'
 import { profileApi } from '@/api/profile'
 import type { UserProfile } from '@/types'
 import { useSwipeTab } from '@/hooks/useSwipeTab'
+import { useAuth } from '@/contexts/useAuthHook'
 import CustomTabBar from '@/custom-tab-bar'
 import './index.scss'
 
@@ -44,6 +46,7 @@ function displayValue(field: PickerField, value: string | number | undefined): s
 }
 
 export default function ProfilePage() {
+  const { user } = useAuth()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -57,9 +60,10 @@ export default function ProfilePage() {
     schoolLevelRange: undefined,
   })
 
-  const swipeHandlers = useSwipeTab()
+const swipeHandlers = useSwipeTab()
 
   useEffect(() => {
+    if (!user) return
     (async () => {
       try {
         setLoading(true)
@@ -80,7 +84,29 @@ export default function ProfilePage() {
         setLoading(false)
       }
     })()
-  }, [form])
+  }, [form, user])
+
+  // Auth gate: show login prompt if not authenticated
+  if (!user) {
+    return (
+      <View className='profile-page' {...swipeHandlers}>
+        <View className='auth-gate'>
+          <View className='auth-gate-icon'>🔒</View>
+          <Text className='auth-gate-title'>请先登录</Text>
+          <Text className='auth-gate-desc'>登录后即可编辑个人档案，获取精准志愿推荐</Text>
+          <View className='auth-gate-actions'>
+            <Button block color='primary' size='large' onClick={() => Taro.navigateTo({ url: '/pages/login/index' })} className='auth-gate-btn'>
+              登录
+            </Button>
+            <Button block fill='none' size='large' onClick={() => Taro.navigateTo({ url: '/pages/register/index' })} className='auth-gate-btn auth-gate-btn-secondary'>
+              注册新账号
+            </Button>
+          </View>
+        </View>
+        <CustomTabBar />
+      </View>
+    )
+  }
 
   /** Clean form values before sending to backend:
    *  - Convert empty strings to null for numeric fields

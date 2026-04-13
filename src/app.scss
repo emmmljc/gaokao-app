@@ -181,3 +181,55 @@ input, textarea, [contenteditable] {
   gap: 16px;
   color: var(--color-text-tertiary);
 }
+
+/* Auth gate - shown when user is not logged in */
+.auth-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 48px 32px;
+  text-align: center;
+}
+
+.auth-gate-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.auth-gate-title {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.auth-gate-desc {
+  display: block;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 32px;
+  max-width: 280px;
+}
+
+.auth-gate-actions {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-gate-btn {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
+.auth-gate-btn-secondary {
+  border: 1px solid #4f46e5 !important;
+  color: #4f46e5 !important;
+}
