@@ -24,7 +24,6 @@ import type {
   Major,
 } from '@/types'
 import CustomTabBar from '@/custom-tab-bar'
-import OverflowMenu from '@/components/OverflowMenu'
 import './index.scss'
 
 // Suitability band color mapping
@@ -327,10 +326,7 @@ export default function MajorComparePage() {
       <ScrollView scrollY className="major-compare-scroll">
         {/* Header */}
         <View className="page-header">
-          <View className="page-header-row">
-            <Text className="page-title">专业分析</Text>
-            <OverflowMenu />
-          </View>
+          <Text className="page-title">专业分析</Text>
           <Text className="page-subtitle">
             对比不同院校相近专业的历年录取分数与位次趋势，评估报考风险
           </Text>
