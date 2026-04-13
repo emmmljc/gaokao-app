@@ -4,13 +4,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #f8fafc;
+  background-color: var(--color-bg-base);
   gap: 12px;
 }
 
 .major-detail-loading-text {
   font-size: 14px;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .major-detail-empty {
@@ -19,13 +19,13 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background-color: #f8fafc;
+  background-color: var(--color-bg-base);
 }
 
 .major-detail-container {
   min-height: 100vh;
   padding: 16px;
-  background-color: #f8fafc;
+  background-color: var(--color-bg-base);
 }
 
 .major-detail-back {
@@ -36,9 +36,9 @@
   margin-bottom: 20px;
   font-size: 14px;
   font-weight: 500;
-  color: #64748b;
+  color: var(--color-text-secondary);
   background: #fff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 20px;
 }
 
@@ -54,7 +54,7 @@
   background: #fff;
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   margin-bottom: 16px;
   position: relative;
   overflow: hidden;
@@ -72,7 +72,14 @@
 }
 
 .major-info-badge-icon {
-  font-size: 12px;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 .major-info-badge-text {
@@ -84,13 +91,13 @@
 .major-info-name {
   font-size: 24px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-main);
   margin-bottom: 8px;
 }
 
 .major-info-subtitle {
   font-size: 16px;
-  color: #94a3b8;
+  color: var(--color-text-tertiary);
   margin-bottom: 20px;
 }
 
@@ -99,7 +106,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   padding-top: 20px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--color-border);
 }
 
 .major-info-item {
@@ -111,27 +118,27 @@
 .major-info-label {
   font-size: 13px;
   font-weight: 500;
-  color: #94a3b8;
+  color: var(--color-text-tertiary);
 }
 
 .major-info-value {
   font-size: 16px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-text-main);
 }
 
 .major-chart-card {
   background: #fff;
   border-radius: 16px;
   padding: 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   margin-bottom: 16px;
 }
 
 .major-card-title {
   font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-main);
   margin-bottom: 16px;
 }
 
@@ -153,26 +160,28 @@
   justify-content: center;
   margin-bottom: 16px;
   background: rgba(79, 70, 229, 0.06);
-  font-size: 24px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px 24px;
 }
 
 .major-chart-placeholder-title {
   font-size: 16px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-text-main);
   margin-bottom: 4px;
 }
 
 .major-chart-placeholder-desc {
   font-size: 14px;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .major-schools-card {
   background: #fff;
   border-radius: 16px;
   padding: 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
 }
 
 .major-schools-list {
@@ -187,8 +196,8 @@
   justify-content: space-between;
   padding: 16px;
   border-radius: 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border);
 
   &:active {
     background: #fff;
@@ -206,7 +215,7 @@
 .major-school-name {
   font-size: 16px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-text-main);
 }
 
 .major-school-location {
@@ -216,24 +225,31 @@
 }
 
 .major-school-location-icon {
-  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 .major-school-location-text {
   font-size: 14px;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .major-school-arrow {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background-color: var(--color-bg-base);
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #475569;
+  color: var(--color-text-secondary);
   font-size: 14px;
 }
 
@@ -246,18 +262,44 @@
 }
 
 .major-schools-empty-icon {
-  font-size: 32px;
+  width: 32px;
+  height: 32px;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 32px 32px;
 }
 
 .major-schools-empty-title {
   font-size: 16px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-text-main);
   margin-bottom: 4px;
 }
 
 .major-schools-empty-desc {
   font-size: 14px;
-  color: #64748b;
+  color: var(--color-text-secondary);
+}
+
+/* =========================================
+   MAJOR DETAIL ICONS - SVG Data URI Background
+   ========================================= */
+.icon-book {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20'/%3E%3Cpath d='M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'/%3E%3C/svg%3E");
+}
+
+.icon-chart {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='20' x2='18' y2='10'/%3E%3Cline x1='12' y1='20' x2='12' y2='4'/%3E%3Cline x1='6' y1='20' x2='6' y2='14'/%3E%3C/svg%3E");
+}
+
+.icon-location {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+}
+
+.icon-school {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 10v6M2 10l10-5 10 5-10 5z'/%3E%3Cpath d='M6 12v5c0 2 2 3 6 3s6-1 6-3v-5'/%3E%3C/svg%3E");
 }

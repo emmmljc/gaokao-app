@@ -215,10 +215,12 @@ export default function SchoolDetailPage() {
 
         <View className="school-header-info">
           <Text className="header-info-item">
-            📍 {school.province}{school.city ? ` · ${school.city}` : ''}
+            <View className="header-info-icon icon-location" />
+            {school.province}{school.city ? ` · ${school.city}` : ''}
           </Text>
           <Text className="header-info-item">
-            🏫 {school.schoolType || '综合类'}
+            <View className="header-info-icon icon-school" />
+            {school.schoolType || '综合类'}
           </Text>
           <Text className="header-info-item">
             ID: {school.schoolId || '暂无'}
@@ -253,7 +255,10 @@ export default function SchoolDetailPage() {
                   
                   {scoreTrendTableData.length > 0 ? (
                     <View className="score-trend-placeholder">
-                      <Text className="placeholder-text">📊 图表功能暂未支持</Text>
+                      <View className="placeholder-icon-row">
+                        <View className="icon-chart-small" />
+                        <Text className="placeholder-text">图表功能暂未支持</Text>
+                      </View>
                       <View className="score-table">
                         <View className="score-table-header">
                           <Text className="score-table-cell">年份</Text>

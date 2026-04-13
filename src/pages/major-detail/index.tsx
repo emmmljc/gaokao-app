@@ -68,7 +68,7 @@ export default function MajorDetailPage() {
       {/* Major Info Card */}
       <View className="major-info-card">
         <View className="major-info-badge">
-          <Text className="major-info-badge-icon">📚</Text>
+          <View className="major-info-badge-icon icon-book" />
           <Text className="major-info-badge-text">
             {detail.major.category || '专业详情'}
           </Text>
@@ -111,9 +111,7 @@ export default function MajorDetailPage() {
       <View className="major-chart-card">
         <Text className="major-card-title">历年录取分数趋势</Text>
         <View className="major-chart-placeholder">
-          <View className="major-chart-placeholder-icon">
-            <Text>📊</Text>
-          </View>
+          <View className="major-chart-placeholder-icon icon-chart" />
           <Text className="major-chart-placeholder-title">
             图表功能暂未支持
           </Text>
@@ -138,7 +136,7 @@ export default function MajorDetailPage() {
                 <View className="major-school-content">
                   <Text className="major-school-name">{school.name}</Text>
                   <View className="major-school-location">
-                    <Text className="major-school-location-icon">📍</Text>
+                    <View className="major-school-location-icon icon-location" />
                     <Text className="major-school-location-text">
                       {school.province}
                       {school.city ? ` · ${school.city}` : ''}
@@ -153,9 +151,7 @@ export default function MajorDetailPage() {
           </View>
         ) : (
           <View className="major-schools-empty">
-            <View className="major-schools-empty-icon">
-              <Text>🏫</Text>
-            </View>
+            <View className="major-schools-empty-icon icon-school" />
             <Text className="major-schools-empty-title">暂无开设院校</Text>
             <Text className="major-schools-empty-desc">
               当前数据库中暂未收录开设该专业的院校信息
