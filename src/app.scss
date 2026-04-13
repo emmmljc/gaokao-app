@@ -194,15 +194,19 @@ input, textarea, [contenteditable] {
 }
 
 .auth-gate-icon {
-  font-size: 48px;
+  width: 48px;
+  height: 48px;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .auth-gate-title {
   display: block;
   font-size: 22px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-main);
   margin-bottom: 8px;
   letter-spacing: -0.02em;
 }
@@ -210,7 +214,7 @@ input, textarea, [contenteditable] {
 .auth-gate-desc {
   display: block;
   font-size: 14px;
-  color: #64748b;
+  color: var(--color-text-secondary);
   line-height: 1.5;
   margin-bottom: 32px;
   max-width: 280px;
