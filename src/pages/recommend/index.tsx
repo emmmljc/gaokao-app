@@ -56,15 +56,15 @@ function SchoolCard({ item, tier, index }: { item: RecommendItem; tier: 'reach' 
           <View className='school-tags-expanded'>
             {item.schoolLevel && item.schoolLevel !== '普通本科' && (
               <Tag color='primary' fill='outline' className='school-tag-level'>
-                🏆 {item.schoolLevel}
+                <View className='tag-icon-row'><View className='icon-trophy' /> {item.schoolLevel}</View>
               </Tag>
             )}
-            <Text className='school-city'>📍 {item.city}</Text>
+            <Text className='school-city'><View className='icon-location-small' /> {item.city}</Text>
           </View>
 
           {item.majorNames && item.majorNames.length > 0 && (
             <View className='school-card-majors'>
-              <Text className='majors-label'>🎓 推荐专业组</Text>
+              <Text className='majors-label'><View className='icon-grad-cap-small' /> 推荐专业组</Text>
               <View className='majors-list'>
                 {item.majorNames.slice(0, 8).map((major, i) => (
                   <Tag key={i} fill='outline' className='major-tag'>{major}</Tag>
@@ -159,7 +159,7 @@ export default function RecommendPage() {
     return (
       <View className='recommend-page-scroll'>
         <View className='auth-gate'>
-          <View className='auth-gate-icon'>✨</View>
+          <View className='auth-gate-icon icon-sparkle-white' />
           <Text className='auth-gate-title'>请先登录</Text>
           <Text className='auth-gate-desc'>登录后即可查看智能推荐结果，获取冲稳保志愿方案</Text>
           <View className='auth-gate-actions'>
@@ -187,30 +187,30 @@ export default function RecommendPage() {
     {
       id: 'reach' as const,
       title: '冲一冲',
-      icon: '🎯',
+      iconKey: 'target',
       desc: '录取概率较低，但值得一试的高校',
       data: normalizedData.reach
     },
     {
       id: 'steady' as const,
       title: '稳一稳',
-      icon: '🧭',
+      iconKey: 'compass',
       desc: '录取概率适中，符合成绩预期的主力军',
       data: normalizedData.steady
     },
     {
       id: 'safe' as const,
       title: '保一保',
-      icon: '🛡️',
+      iconKey: 'shield',
       desc: '录取概率较高，作为保底的安全选择',
       data: normalizedData.safe
     }
   ]
 
   const portfolioTabs = [
-    { id: 'aggressive' as const, title: '冲刺方案', icon: '🎯' },
-    { id: 'balanced' as const, title: '均衡方案', icon: '🧭' },
-    { id: 'conservative' as const, title: '稳妥方案', icon: '🛡️' }
+    { id: 'aggressive' as const, title: '冲刺方案', iconKey: 'target' },
+    { id: 'balanced' as const, title: '均衡方案', iconKey: 'compass' },
+    { id: 'conservative' as const, title: '稳妥方案', iconKey: 'shield' }
   ]
 
   const portfolioPanels = useMemo(() => {
@@ -223,20 +223,20 @@ export default function RecommendPage() {
       let tier: 'reach' | 'steady' | 'safe' = 'steady'
       let title = '均衡填报方案'
       let shortDesc = '冲稳保比例均衡，适合作为首选主方案直接参考填报。'
-      let icon = '🧭'
+      let iconKey = 'compass'
 
       if (isAggressive) {
         tier = 'reach'
         title = '冲刺填报方案'
         shortDesc = '为高目标院校预留更多席位，适合想冲更高层次学校时直接照表填报。'
-        icon = '🎯'
+        iconKey = 'target'
       }
 
       if (isConservative) {
         tier = 'safe'
         title = '稳妥填报方案'
         shortDesc = '保底更厚、整体更稳，适合优先确保录取结果时直接采用。'
-        icon = '🛡️'
+        iconKey = 'shield'
       }
 
       return {
@@ -244,7 +244,7 @@ export default function RecommendPage() {
         tier,
         title,
         shortDesc,
-        icon,
+        iconKey,
         portfolio,
       }
     })
@@ -268,9 +268,7 @@ export default function RecommendPage() {
       <View className='recommend-need-profile'>
         <View className='recommend-layout-bg' />
         <View className='state-card light-glass state-card-large'>
-          <View className='state-icon-wrap'>
-            <Text className='state-icon'>✨</Text>
-          </View>
+          <View className='state-icon-wrap icon-sparkle-white' />
           <Text className='state-title-large'>开启智能推荐</Text>
           <Text className='state-desc-large'>
             为了提供精准的冲稳保志愿方案，我们需要了解您的成绩和偏好信息。
@@ -303,7 +301,7 @@ export default function RecommendPage() {
           <View className='section-title-row'>
             <Text className='section-heading-modern'>志愿填报方案</Text>
             <View className='section-badge section-badge-portfolio'>
-              <Text className='badge-icon'>✨</Text>
+              <View className='badge-icon icon-sparkle-blue' />
               <Text className='badge-text'>组合推荐</Text>
             </View>
           </View>
@@ -327,7 +325,7 @@ export default function RecommendPage() {
                     className={`tab-button ${isActive ? `tab-button-active tab-button-${tier}` : ''}`}
                     onClick={() => setActivePortfolioStyle(tab.id)}
                   >
-                    <Text className='tab-button-icon'>{tab.icon}</Text>
+                    <View className={`tab-button-icon icon-${tab.iconKey}-${tier}`} />
                     <Text className='tab-button-text'>{tab.title} ({count})</Text>
                   </View>
                 )
@@ -345,7 +343,7 @@ export default function RecommendPage() {
                   <View className='portfolio-card-header'>
                     <View className='panel-title-wrap'>
                       <View className={`panel-icon-wrap panel-icon-${activePanel.tier}`}>
-                        <Text className='panel-icon'>{activePanel.icon}</Text>
+                        <View className={`icon-${activePanel.iconKey}-${activePanel.tier}`} />
                       </View>
                       <View className='portfolio-title-container' onClick={() => togglePortfolioDescription(activePanel.id)}>
                         <Text className='panel-title'>{activePanel.title}</Text>
@@ -428,7 +426,7 @@ export default function RecommendPage() {
           <View className='section-title-row'>
             <Text className='section-heading-modern'>优质冲稳保志愿推荐</Text>
             <View className='section-badge section-badge-volunteer'>
-              <Text className='badge-icon'>🎯</Text>
+              <View className='badge-icon icon-target-orange' />
               <Text className='badge-text'>单项推荐</Text>
             </View>
           </View>
@@ -449,7 +447,7 @@ export default function RecommendPage() {
                     className={`tab-button ${isActive ? `tab-button-active tab-button-${tab.id}` : ''}`}
                     onClick={() => setActiveVolunteerTier(tab.id)}
                   >
-                    <Text className='tab-button-icon'>{tab.icon}</Text>
+                    <View className={`tab-button-icon icon-${tab.iconKey}-${tab.id}`} />
                     <Text className='tab-button-text'>{tab.title} ({tab.data.length})</Text>
                   </View>
                 )
@@ -466,7 +464,7 @@ export default function RecommendPage() {
                   <View className='volunteer-panel-header'>
                     <View className='panel-title-wrap'>
                       <View className={`panel-icon-wrap panel-icon-${activeTab.id}`}>
-                        <Text className='panel-icon'>{activeTab.icon}</Text>
+                        <View className={`icon-${activeTab.iconKey}-${activeTab.id}`} />
                       </View>
                       <Text className='panel-title'>{activeTab.title}</Text>
                     </View>

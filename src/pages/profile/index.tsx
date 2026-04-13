@@ -91,7 +91,7 @@ const swipeHandlers = useSwipeTab()
     return (
       <View className='profile-page' {...swipeHandlers}>
         <View className='auth-gate'>
-          <View className='auth-gate-icon'>🔒</View>
+          <View className='auth-gate-icon icon-lock' />
           <Text className='auth-gate-title'>请先登录</Text>
           <Text className='auth-gate-desc'>登录后即可编辑个人档案，获取精准志愿推荐</Text>
           <View className='auth-gate-actions'>
@@ -189,7 +189,7 @@ const swipeHandlers = useSwipeTab()
           if (profile) setProfile(profile)
         } catch { /* silently ignore */ }
       }}>
-<View className='profile-header'>
+ <View className='profile-header'>
           <Text className='profile-title'>个人档案</Text>
         <Text className='profile-subtitle'>完善您的档案，获取更精准的志愿推荐</Text>
       </View>
