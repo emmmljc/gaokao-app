@@ -4,6 +4,7 @@ import { PullToRefresh } from 'antd-mobile'
 import { useAuth } from '@/contexts/useAuthHook'
 import { useSwipeTab } from '@/hooks/useSwipeTab'
 import CustomTabBar from '@/custom-tab-bar'
+import OverflowMenu from '@/components/OverflowMenu'
 import './index.scss'
 
 // Quick entry items for the 2x3 grid
@@ -74,6 +75,10 @@ export default function HomePage() {
 
   return (
     <View className="home-container" {...swipeHandlers}>
+      <View className="home-top-bar">
+        <Text className="home-top-bar-title">高考志愿通</Text>
+        <OverflowMenu />
+      </View>
       <PullToRefresh
         onRefresh={async () => {
           await Taro.getCurrentPages()

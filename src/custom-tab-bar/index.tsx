@@ -5,9 +5,7 @@ import './index.scss'
 
 const TAB_LIST = [
   { pagePath: '/pages/home/index', text: '首页' },
-  { pagePath: '/pages/school-list/index', text: '院校' },
   { pagePath: '/pages/major-compare/index', text: '专业' },
-  { pagePath: '/pages/score-analysis/index', text: '位次' },
   { pagePath: '/pages/recommend/index', text: '推荐' },
   { pagePath: '/pages/profile/index', text: '我的' },
 ]
@@ -135,12 +133,8 @@ function TabIcon({ pagePath, active }: { pagePath: string; active: boolean }) {
   switch (pagePath) {
     case '/pages/home/index':
       return <HomeIcon active={active} />
-    case '/pages/school-list/index':
-      return <SchoolIcon active={active} />
     case '/pages/major-compare/index':
       return <MajorIcon active={active} />
-    case '/pages/score-analysis/index':
-      return <AnalysisIcon active={active} />
     case '/pages/recommend/index':
       return <RecommendIcon active={active} />
     case '/pages/profile/index':

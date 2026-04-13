@@ -1,0 +1,80 @@
+/* Overflow Menu - Top-right hamburger dropdown */
+
+.overflow-menu {
+  position: relative;
+  z-index: 100;
+}
+
+.overflow-trigger {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background 0.2s ease;
+}
+
+.overflow-trigger:active {
+  background: rgba(79, 70, 229, 0.1);
+}
+
+.overflow-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 998;
+}
+
+.overflow-dropdown {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  min-width: 140px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 6px 0;
+  z-index: 999;
+  animation: overflowFadeIn 0.15s ease-out;
+}
+
+@keyframes overflowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.overflow-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  transition: background 0.15s ease;
+}
+
+.overflow-dropdown-item:active {
+  background: #f8fafc;
+}
+
+.overflow-dropdown-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.overflow-dropdown-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+  letter-spacing: -0.01em;
+}

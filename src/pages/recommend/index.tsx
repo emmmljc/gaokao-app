@@ -7,6 +7,7 @@ import { recommendApi } from '@/api/recommend'
 import { useAuth } from '@/contexts/useAuthHook'
 import type { RecommendItem, RecommendResponse, UserProfile, PortfolioRecommendResponse } from '@/types'
 import CustomTabBar from '@/custom-tab-bar'
+import OverflowMenu from '@/components/OverflowMenu'
 import './index.scss'
 
 function hasRequiredProfile(profile: UserProfile | null | undefined): boolean {
@@ -262,6 +263,10 @@ export default function RecommendPage() {
 
   return (
     <ScrollView scrollY className='recommend-page-scroll'>
+      <View className='recommend-top-bar'>
+        <Text className='recommend-top-bar-title'>智能推荐</Text>
+        <OverflowMenu />
+      </View>
       <PullToRefresh onRefresh={async () => {
         try {
           const profile = await profileApi.get()

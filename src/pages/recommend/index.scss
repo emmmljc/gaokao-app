@@ -4,8 +4,34 @@
   min-height: 100vh;
   background: var(--color-bg-base);
   color: var(--color-text-main);
-  padding: 24px 24px 160px;
+  padding: 0 24px 160px;
   box-sizing: border-box;
+}
+
+.recommend-top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+  margin: 0 -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+}
+
+.recommend-top-bar-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: -0.01em;
 }
 
 .recommend-layout-bg {

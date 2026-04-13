@@ -5,6 +5,7 @@ import { profileApi } from '@/api/profile'
 import type { UserProfile } from '@/types'
 import { useSwipeTab } from '@/hooks/useSwipeTab'
 import CustomTabBar from '@/custom-tab-bar'
+import OverflowMenu from '@/components/OverflowMenu'
 import './index.scss'
 
 const YEARS = [2024, 2025, 2026]
@@ -163,8 +164,11 @@ export default function ProfilePage() {
           if (profile) setProfile(profile)
         } catch { /* silently ignore */ }
       }}>
-      <View className='profile-header'>
-        <Text className='profile-title'>个人档案</Text>
+<View className='profile-header'>
+          <View className='profile-header-row'>
+            <Text className='profile-title'>个人档案</Text>
+            <OverflowMenu />
+          </View>
         <Text className='profile-subtitle'>完善您的档案，获取更精准的志愿推荐</Text>
       </View>
 

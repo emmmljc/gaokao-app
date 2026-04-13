@@ -34,20 +34,8 @@ export default defineAppConfig({
         selectedIconPath: 'assets/logo.png',
       },
       {
-        pagePath: 'pages/school-list/index',
-        text: '院校',
-        iconPath: 'assets/logo.png',
-        selectedIconPath: 'assets/logo.png',
-      },
-      {
         pagePath: 'pages/major-compare/index',
         text: '专业',
-        iconPath: 'assets/logo.png',
-        selectedIconPath: 'assets/logo.png',
-      },
-      {
-        pagePath: 'pages/score-analysis/index',
-        text: '位次',
         iconPath: 'assets/logo.png',
         selectedIconPath: 'assets/logo.png',
       },
