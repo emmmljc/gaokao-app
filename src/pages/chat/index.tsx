@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import { Button, TextArea, Toast, DotLoading, Empty, Avatar } from 'antd-mobile'
 import { SendOutline, AddOutline, StopOutline } from 'antd-mobile-icons'
 import { useChat } from '@/hooks/useChat'
+import { useAuth } from '@/contexts/useAuthHook'
 import logoImg from '@/assets/logo.png'
 import type { ChatIntermediateStep, ChatMessage } from '@/types/chat'
 import './index.scss'
@@ -65,16 +67,116 @@ function ChatMessageBubble({ message }: { message: ChatMessage }) {
   )
 }
 
+function formatRelativeTime(timestamp: number): string {
+  const now = Date.now()
+  const diff = now - timestamp
+  const minutes = Math.floor(diff / 60000)
+  const hours = Math.floor(diff / 3600000)
+  const days = Math.floor(diff / 86400000)
+
+  if (minutes < 1) return '刚刚'
+  if (minutes < 60) return `${minutes}分钟前`
+  if (hours < 24) return `${hours}小时前`
+  if (days < 7) return `${days}天前`
+  return new Date(timestamp).toLocaleDateString('zh-CN')
+}
+
+function ConversationSidebar({
+  isOpen,
+  onClose,
+  conversations,
+  activeConversationId,
+  onNewConversation,
+  onSwitchConversation,
+  onDeleteConversation,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  conversations: Array<{ id: string; title: string; updatedAt: number; messageCount: number }>
+  activeConversationId: string | null
+  onNewConversation: () => void
+  onSwitchConversation: (id: string) => void
+  onDeleteConversation: (id: string) => void
+}) {
+  return (
+    <>
+      {/* Overlay */}
+      <View
+        className={`sidebar-overlay ${isOpen ? 'sidebar-overlay-visible' : ''}`}
+        onClick={onClose}
+      />
+
+      {/* Sidebar */}
+      <View className={`conversation-sidebar ${isOpen ? 'sidebar-open' : ''}`}>
+        <View className='sidebar-header'>
+          <Text className='sidebar-title'>对话历史</Text>
+          <View className='sidebar-close' onClick={onClose}>
+            <View className='icon-close' />
+          </View>
+        </View>
+
+        <View className='sidebar-new-btn' onClick={onNewConversation}>
+          <View className='icon-plus-white' />
+          <Text className='sidebar-new-btn-text'>新对话</Text>
+        </View>
+
+        <ScrollView scrollY className='sidebar-list'>
+          {conversations.length === 0 ? (
+            <View className='sidebar-empty'>
+              <Text className='sidebar-empty-text'>暂无对话记录</Text>
+            </View>
+          ) : (
+            conversations.map((conv) => (
+              <View
+                key={conv.id}
+                className={`sidebar-item ${conv.id === activeConversationId ? 'sidebar-item-active' : ''}`}
+                onClick={() => {
+                  onSwitchConversation(conv.id)
+                  onClose()
+                }}
+              >
+                <View className='sidebar-item-content'>
+                  <Text className='sidebar-item-title'>{conv.title}</Text>
+                  <View className='sidebar-item-meta'>
+                    <Text className='sidebar-item-count'>{conv.messageCount} 条消息</Text>
+                    <Text className='sidebar-item-time'>{formatRelativeTime(conv.updatedAt)}</Text>
+                  </View>
+                </View>
+                <View
+                  className='sidebar-item-delete'
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onDeleteConversation(conv.id)
+                  }}
+                >
+                  <View className='icon-trash' />
+                </View>
+              </View>
+            ))
+          )}
+        </ScrollView>
+      </View>
+    </>
+  )
+}
+
 export default function ChatPage() {
+  const { user } = useAuth()
   const [draft, setDraft] = useState('')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const scrollRef = useRef<any>(null)
   const {
+    conversations,
+    activeConversationId,
     messages,
     sending,
     health,
     streamError,
     exampleQuestions,
     sendMessage,
+    startNewConversation,
+    switchConversation,
+    deleteConversation,
     stopStreaming,
   } = useChat()
 
@@ -99,8 +201,69 @@ export default function ChatPage() {
     }
   }
 
+  const handleNewConversation = async () => {
+    await startNewConversation()
+    setSidebarOpen(false)
+  }
+
+  const handleSwitchConversation = (id: string) => {
+    switchConversation(id)
+  }
+
+  const handleDeleteConversation = (id: string) => {
+    deleteConversation(id)
+  }
+
+  // Auth gate: show login prompt if not authenticated
+  if (!user) {
+    return (
+      <View className='chat-page'>
+        <View className='auth-gate'>
+          <View className='auth-gate-icon icon-robot' />
+          <Text className='auth-gate-title'>请先登录</Text>
+          <Text className='auth-gate-desc'>登录后即可使用AI智能填表助手，获取个性化志愿推荐</Text>
+          <View className='auth-gate-actions'>
+            <Button block color='primary' size='large' onClick={() => Taro.navigateTo({ url: '/pages/login/index' })} className='auth-gate-btn'>
+              登录
+            </Button>
+            <Button block fill='none' size='large' onClick={() => Taro.navigateTo({ url: '/pages/register/index' })} className='auth-gate-btn auth-gate-btn-secondary'>
+              注册新账号
+            </Button>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
   return (
     <View className='chat-page'>
+      {/* Conversation Sidebar */}
+      <ConversationSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        conversations={conversations}
+        activeConversationId={activeConversationId}
+        onNewConversation={handleNewConversation}
+        onSwitchConversation={handleSwitchConversation}
+        onDeleteConversation={handleDeleteConversation}
+      />
+
+      {/* Header Bar */}
+      <View className='chat-header'>
+        <View className='header-left'>
+          <View className='header-icon-btn' onClick={() => setSidebarOpen(true)}>
+            <View className='icon-history' />
+          </View>
+        </View>
+        <Text className='header-title'>高考志愿助手</Text>
+        <View className='header-right'>
+          <View className='header-text-btn' onClick={handleNewConversation}>
+            <View className='icon-plus-white' />
+            <Text className='header-text-btn-label'>新对话</Text>
+          </View>
+        </View>
+      </View>
+
       {/* Messages Area */}
       <ScrollView scrollY className='chat-scroll-area' ref={scrollRef}>
         <View className='chat-content'>
@@ -108,7 +271,7 @@ export default function ChatPage() {
             <View className='chat-empty'>
               <View className='chat-welcome'>
                 <View className='welcome-icon'>
-                  <Text className='welcome-icon-text'>🎓</Text>
+                  <View className='icon-graduation-cap' />
                 </View>
                 <Text className='welcome-title'>有什么我可以帮您的？</Text>
                 <Text className='welcome-desc'>我可以回答高考分数、专业组、院校录取趋势相关的问题。</Text>
