@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { Button, DotLoading, Toast, Tag } from 'antd-mobile'
+import { Button, DotLoading, Toast, Tag, PullToRefresh } from 'antd-mobile'
 import { profileApi } from '@/api/profile'
 import { recommendApi } from '@/api/recommend'
 import { useAuth } from '@/contexts/useAuthHook'
@@ -81,37 +81,14 @@ function SchoolCard({ item, tier, index }: { item: RecommendItem; tier: 'reach' 
   )
 }
 
-function getCarouselTransform(index: number, activeIdx: number) {
-  const isCenter = activeIdx === index
-  let isLeft = false
-  let isRight = false
-
-  if (!isCenter) {
-    if (activeIdx === 0) { isLeft = index === 2; isRight = index === 1 }
-    else if (activeIdx === 1) { isLeft = index === 0; isRight = index === 2 }
-    else if (activeIdx === 2) { isLeft = index === 1; isRight = index === 0 }
-  }
-
-  if (isCenter) {
-    return { isCenter, x: 0, scale: 1, zIndex: 5, opacity: 1 }
-  }
-  if (isLeft) {
-    return { isCenter, x: -65, scale: 0.85, zIndex: 1, opacity: 0.9 }
-  }
-  if (isRight) {
-    return { isCenter, x: 65, scale: 0.85, zIndex: 1, opacity: 0.9 }
-  }
-  return { isCenter, x: 0, scale: 0, zIndex: 0, opacity: 0 }
-}
-
 export default function RecommendPage() {
   const { user } = useAuth()
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<RecommendResponse | null>(null)
   const [portfolioData, setPortfolioData] = useState<PortfolioRecommendResponse | null>(null)
   const [needProfile, setNeedProfile] = useState(false)
-  const [activePortfolioIndex, setActivePortfolioIndex] = useState<number>(0)
-  const [activeVolunteerIndex, setActiveVolunteerIndex] = useState<number>(0)
+  const [activePortfolioStyle, setActivePortfolioStyle] = useState<'aggressive' | 'balanced' | 'conservative'>('balanced')
+  const [activeVolunteerTier, setActiveVolunteerTier] = useState<'reach' | 'steady' | 'safe'>('steady')
   const [expandedPortfolioDescriptions, setExpandedPortfolioDescriptions] = useState<Record<string, boolean>>({})
 
   const redirectToProfile = useCallback(() => {
@@ -134,19 +111,35 @@ export default function RecommendPage() {
       try {
         setLoading(true)
 
+        // Fetch profile first, then recommendations sequentially to avoid overloading backend
         const profile = await profileApi.get()
         if (!hasRequiredProfile(profile)) {
           redirectToProfile()
           return
         }
 
-        const [volunteersResult, portfoliosResult] = await Promise.all([
-          data ? Promise.resolve(data) : recommendApi.getVolunteers(),
-          portfolioData ? Promise.resolve(portfolioData) : recommendApi.getPortfolios(),
-        ])
+        // Sequential requests to avoid 502 from backend overload
+        let volunteersResult: RecommendResponse | null = null
+        let portfoliosResult: PortfolioRecommendResponse | null = null
 
-        if (!data) setData(volunteersResult)
-        if (!portfolioData) setPortfolioData(portfoliosResult)
+        try {
+          volunteersResult = data ? data : await recommendApi.getVolunteers()
+        } catch (e) {
+          // Volunteers may fail independently, try portfolios anyway
+        }
+
+        try {
+          portfoliosResult = portfolioData ? portfolioData : await recommendApi.getPortfolios()
+        } catch (e) {
+          // Portfolios may fail independently
+        }
+
+        if (!volunteersResult && !portfoliosResult) {
+          throw new Error('获取推荐结果失败')
+        }
+
+        if (volunteersResult) setData(volunteersResult)
+        if (portfoliosResult) setPortfolioData(portfoliosResult)
       } catch (error) {
         const text = error instanceof Error ? error.message : '获取推荐结果失败'
         if (text.includes('档案') || text.includes('profile') || text.includes('404') || text.includes('401')) {
@@ -167,31 +160,34 @@ export default function RecommendPage() {
     }))
   }, [])
 
-  const panels = [
+  const volunteerTabs = [
     {
-      id: 'reach',
-      tier: 'reach' as const,
+      id: 'reach' as const,
       title: '冲一冲',
       icon: '🎯',
       desc: '录取概率较低，但值得一试的高校',
       data: normalizedData.reach
     },
     {
-      id: 'steady',
-      tier: 'steady' as const,
+      id: 'steady' as const,
       title: '稳一稳',
       icon: '🧭',
       desc: '录取概率适中，符合成绩预期的主力军',
       data: normalizedData.steady
     },
     {
-      id: 'safe',
-      tier: 'safe' as const,
+      id: 'safe' as const,
       title: '保一保',
       icon: '🛡️',
       desc: '录取概率较高，作为保底的安全选择',
       data: normalizedData.safe
     }
+  ]
+
+  const portfolioTabs = [
+    { id: 'aggressive' as const, title: '冲刺方案', icon: '🎯' },
+    { id: 'balanced' as const, title: '均衡方案', icon: '🧭' },
+    { id: 'conservative' as const, title: '稳妥方案', icon: '🛡️' }
   ]
 
   const portfolioPanels = useMemo(() => {
@@ -266,6 +262,16 @@ export default function RecommendPage() {
 
   return (
     <ScrollView scrollY className='recommend-page-scroll'>
+      <PullToRefresh onRefresh={async () => {
+        try {
+          const profile = await profileApi.get()
+          if (!hasRequiredProfile(profile)) return
+          const volunteersResult = await recommendApi.getVolunteers()
+          if (volunteersResult) setData(volunteersResult)
+          const portfoliosResult = await recommendApi.getPortfolios()
+          if (portfoliosResult) setPortfolioData(portfoliosResult)
+        } catch { /* silently ignore */ }
+      }}>
       <View className='recommend-layout-bg' />
 
       {/* Section 1: 志愿填报方案 (Portfolios) */}
@@ -284,99 +290,108 @@ export default function RecommendPage() {
         </View>
 
         {portfolioPanels.length > 0 ? (
-          <View className='carousel-wrapper portfolio-carousel-wrapper'>
-            <View className='carousel-container'>
-              {portfolioPanels.map((panel, index) => {
-                const animProps = getCarouselTransform(index, activePortfolioIndex)
-                const isExpanded = expandedPortfolioDescriptions[panel.id] ?? false
-
+          <>
+            {/* Tab Buttons */}
+            <View className='tab-buttons'>
+              {portfolioTabs.map((tab) => {
+                const panel = portfolioPanels.find(p => p.id === tab.id)
+                const count = panel?.portfolio.items.length ?? 0
+                const isActive = activePortfolioStyle === tab.id
+                const tier = panel?.tier ?? 'steady'
                 return (
                   <View
-                    key={panel.id}
-                    className={`carousel-panel portfolio-panel panel-${panel.tier} ${animProps.isCenter ? 'interactive' : ''}`}
-                    style={{
-                      transform: `translateX(${animProps.x}%) scale(${animProps.scale})`,
-                      zIndex: animProps.zIndex,
-                      opacity: animProps.opacity,
-                    }}
-                    onClick={() => !animProps.isCenter && setActivePortfolioIndex(index)}
+                    key={tab.id}
+                    className={`tab-button ${isActive ? `tab-button-active tab-button-${tier}` : ''}`}
+                    onClick={() => setActivePortfolioStyle(tab.id)}
                   >
-                    {!animProps.isCenter && <View className='panel-overlay' />}
-
-                    <View className='portfolio-card-header'>
-                      <View className='panel-title-wrap'>
-                        <View className={`panel-icon-wrap panel-icon-${panel.tier}`}>
-                          <Text className='panel-icon'>{panel.icon}</Text>
-                        </View>
-                        <View className='portfolio-title-container' onClick={() => togglePortfolioDescription(panel.id)}>
-                          <Text className='panel-title'>{panel.title}</Text>
-                          <Text className={`portfolio-title-chevron ${isExpanded ? 'icon-rotated' : ''}`}>▼</Text>
-                        </View>
-                      </View>
-                      <Text className='panel-count'>{panel.portfolio.items.length} 个志愿</Text>
-                    </View>
-
-                    <Text className='portfolio-short-desc'>{panel.shortDesc}</Text>
-
-                    {isExpanded && (
-                      <View className='portfolio-details-expanded'>
-                        <View className='portfolio-summary-grid'>
-                          <View className='portfolio-summary-card'>
-                            <Text className='portfolio-summary-label'>平均录取率</Text>
-                            <Text className='portfolio-summary-value'>{(panel.portfolio.summary.averageAdmissionProbability * 100).toFixed(1)}%</Text>
-                          </View>
-                          <View className='portfolio-summary-card'>
-                            <Text className='portfolio-summary-label'>冲/稳/保比例</Text>
-                            <Text className='portfolio-summary-value'>{panel.portfolio.summary.reachCount}/{panel.portfolio.summary.steadyCount}/{panel.portfolio.summary.safeCount}</Text>
-                          </View>
-                          <View className='portfolio-summary-card'>
-                            <Text className='portfolio-summary-label'>风险约束</Text>
-                            <Text className={`portfolio-summary-value icon-value ${panel.portfolio.summary.riskConstraintSatisfied ? 'text-success' : 'text-error'}`}>
-                              {panel.portfolio.summary.riskConstraintSatisfied ? '✓ 满足' : '✗ 未满足'}
-                            </Text>
-                          </View>
-                          <View className='portfolio-summary-card'>
-                            <Text className='portfolio-summary-label'>Pareto最优</Text>
-                            <Text className={`portfolio-summary-value icon-value ${panel.portfolio.summary.paretoOptimal ? 'text-success' : 'text-error'}`}>
-                              {panel.portfolio.summary.paretoOptimal ? '✓ 是' : '✗ 否'}
-                            </Text>
-                          </View>
-                        </View>
-
-                        {panel.portfolio.explanations.length > 0 && (
-                          <View className='portfolio-explanations-card-plain'>
-                            <Text className='portfolio-explanations-label'>方案说明：</Text>
-                            {panel.portfolio.explanations.map((exp, expIndex) => (
-                              <Text key={`${panel.id}-${expIndex}`} className='portfolio-explanation-item'>• {exp}</Text>
-                            ))}
-                          </View>
-                        )}
-                      </View>
-                    )}
-
-                    <ScrollView scrollY className='panel-scroll-area'>
-                      <View className='portfolio-card-items'>
-                        {panel.portfolio.items.map((item, itemIndex) => {
-                          let itemTier: 'reach' | 'steady' | 'safe' = 'steady'
-                          if (item.admissionProbability < 0.5) itemTier = 'reach'
-                          else if (item.admissionProbability > 0.8) itemTier = 'safe'
-
-                          return (
-                            <SchoolCard
-                              key={`${panel.id}-${item.schoolId}-${item.groupId}`}
-                              item={item}
-                              tier={itemTier}
-                              index={itemIndex}
-                            />
-                          )
-                        })}
-                      </View>
-                    </ScrollView>
+                    <Text className='tab-button-icon'>{tab.icon}</Text>
+                    <Text className='tab-button-text'>{tab.title} ({count})</Text>
                   </View>
                 )
               })}
             </View>
-          </View>
+
+            {/* Active Panel Content */}
+            {(() => {
+              const activePanel = portfolioPanels.find(p => p.id === activePortfolioStyle)
+              if (!activePanel) return null
+              const isExpanded = expandedPortfolioDescriptions[activePanel.id] ?? false
+
+              return (
+                <View className={`tab-content panel-${activePanel.tier}`}>
+                  <View className='portfolio-card-header'>
+                    <View className='panel-title-wrap'>
+                      <View className={`panel-icon-wrap panel-icon-${activePanel.tier}`}>
+                        <Text className='panel-icon'>{activePanel.icon}</Text>
+                      </View>
+                      <View className='portfolio-title-container' onClick={() => togglePortfolioDescription(activePanel.id)}>
+                        <Text className='panel-title'>{activePanel.title}</Text>
+                        <Text className={`portfolio-title-chevron ${isExpanded ? 'icon-rotated' : ''}`}>▼</Text>
+                      </View>
+                    </View>
+                    <Text className='panel-count'>{activePanel.portfolio.items.length} 个志愿</Text>
+                  </View>
+
+                  <Text className='portfolio-short-desc'>{activePanel.shortDesc}</Text>
+
+                  {isExpanded && (
+                    <View className='portfolio-details-expanded'>
+                      <View className='portfolio-summary-grid'>
+                        <View className='portfolio-summary-card'>
+                          <Text className='portfolio-summary-label'>平均录取率</Text>
+                          <Text className='portfolio-summary-value'>{(activePanel.portfolio.summary.averageAdmissionProbability * 100).toFixed(1)}%</Text>
+                        </View>
+                        <View className='portfolio-summary-card'>
+                          <Text className='portfolio-summary-label'>冲/稳/保比例</Text>
+                          <Text className='portfolio-summary-value'>{activePanel.portfolio.summary.reachCount}/{activePanel.portfolio.summary.steadyCount}/{activePanel.portfolio.summary.safeCount}</Text>
+                        </View>
+                        <View className='portfolio-summary-card'>
+                          <Text className='portfolio-summary-label'>风险约束</Text>
+                          <Text className={`portfolio-summary-value icon-value ${activePanel.portfolio.summary.riskConstraintSatisfied ? 'text-success' : 'text-error'}`}>
+                            {activePanel.portfolio.summary.riskConstraintSatisfied ? '✓ 满足' : '✗ 未满足'}
+                          </Text>
+                        </View>
+                        <View className='portfolio-summary-card'>
+                          <Text className='portfolio-summary-label'>Pareto最优</Text>
+                          <Text className={`portfolio-summary-value icon-value ${activePanel.portfolio.summary.paretoOptimal ? 'text-success' : 'text-error'}`}>
+                            {activePanel.portfolio.summary.paretoOptimal ? '✓ 是' : '✗ 否'}
+                          </Text>
+                        </View>
+                      </View>
+
+                      {activePanel.portfolio.explanations.length > 0 && (
+                        <View className='portfolio-explanations-card-plain'>
+                          <Text className='portfolio-explanations-label'>方案说明：</Text>
+                          {activePanel.portfolio.explanations.map((exp, expIndex) => (
+                            <Text key={`${activePanel.id}-${expIndex}`} className='portfolio-explanation-item'>• {exp}</Text>
+                          ))}
+                        </View>
+                      )}
+                    </View>
+                  )}
+
+                  <ScrollView scrollY className='panel-scroll-area'>
+                    <View className='portfolio-card-items'>
+                      {activePanel.portfolio.items.map((item, itemIndex) => {
+                        let itemTier: 'reach' | 'steady' | 'safe' = 'steady'
+                        if (item.admissionProbability < 0.5) itemTier = 'reach'
+                        else if (item.admissionProbability > 0.8) itemTier = 'safe'
+
+                        return (
+                          <SchoolCard
+                            key={`${activePanel.id}-${item.schoolId}-${item.groupId}`}
+                            item={item}
+                            tier={itemTier}
+                            index={itemIndex}
+                          />
+                        )
+                      })}
+                    </View>
+                  </ScrollView>
+                </View>
+              )
+            })()}
+          </>
         ) : (
           <View className='section-empty'>
             <Text className='empty-text'>暂无填报方案数据，请稍后再试</Text>
@@ -400,63 +415,71 @@ export default function RecommendPage() {
         </View>
 
         {data ? (
-          <View className='carousel-wrapper volunteer-carousel-wrapper'>
-            <View className='carousel-container'>
-              {panels.map((panel, index) => {
-                const animProps = getCarouselTransform(index, activeVolunteerIndex)
-
+          <>
+            {/* Tab Buttons */}
+            <View className='tab-buttons'>
+              {volunteerTabs.map((tab) => {
+                const isActive = activeVolunteerTier === tab.id
                 return (
                   <View
-                    key={panel.id}
-                    className={`carousel-panel volunteer-panel panel-${panel.tier} ${animProps.isCenter ? 'interactive' : ''}`}
-                    style={{
-                      transform: `translateX(${animProps.x}%) scale(${animProps.scale})`,
-                      zIndex: animProps.zIndex,
-                      opacity: animProps.opacity,
-                    }}
-                    onClick={() => !animProps.isCenter && setActiveVolunteerIndex(index)}
+                    key={tab.id}
+                    className={`tab-button ${isActive ? `tab-button-active tab-button-${tab.id}` : ''}`}
+                    onClick={() => setActiveVolunteerTier(tab.id)}
                   >
-                    {!animProps.isCenter && <View className='panel-overlay' />}
-
-                    <View className='volunteer-panel-header'>
-                      <View className='panel-title-wrap'>
-                        <View className={`panel-icon-wrap panel-icon-${panel.tier}`}>
-                          <Text className='panel-icon'>{panel.icon}</Text>
-                        </View>
-                        <Text className='panel-title'>{panel.title}</Text>
-                      </View>
-                      <Text className='panel-count'>{panel.data.length} 所推荐</Text>
-                    </View>
-                    <Text className='panel-desc'>{panel.desc}</Text>
-
-                    <ScrollView scrollY className='panel-scroll-area'>
-                      <View className='volunteer-panel-items'>
-                        {panel.data.map((item, i) => (
-                          <SchoolCard
-                            key={`${item.schoolId}-${item.groupId}`}
-                            item={item}
-                            tier={panel.tier}
-                            index={i}
-                          />
-                        ))}
-                        {panel.data.length === 0 && (
-                          <View className='section-empty'>
-                            <Text className='empty-text'>暂无{panel.title}推荐</Text>
-                          </View>
-                        )}
-                      </View>
-                    </ScrollView>
+                    <Text className='tab-button-icon'>{tab.icon}</Text>
+                    <Text className='tab-button-text'>{tab.title} ({tab.data.length})</Text>
                   </View>
                 )
               })}
             </View>
-          </View>
+
+            {/* Active Panel Content */}
+            {(() => {
+              const activeTab = volunteerTabs.find(t => t.id === activeVolunteerTier)
+              if (!activeTab) return null
+
+              return (
+                <View className={`tab-content panel-${activeTab.id}`}>
+                  <View className='volunteer-panel-header'>
+                    <View className='panel-title-wrap'>
+                      <View className={`panel-icon-wrap panel-icon-${activeTab.id}`}>
+                        <Text className='panel-icon'>{activeTab.icon}</Text>
+                      </View>
+                      <Text className='panel-title'>{activeTab.title}</Text>
+                    </View>
+                    <Text className='panel-count'>{activeTab.data.length} 所推荐</Text>
+                  </View>
+                  <Text className='panel-desc'>{activeTab.desc}</Text>
+
+                  <ScrollView scrollY className='panel-scroll-area'>
+                    <View className='volunteer-panel-items'>
+                      {activeTab.data.map((item, i) => (
+                        <SchoolCard
+                          key={`${item.schoolId}-${item.groupId}`}
+                          item={item}
+                          tier={activeTab.id}
+                          index={i}
+                        />
+                      ))}
+                      {activeTab.data.length === 0 && (
+                        <View className='section-empty'>
+                          <Text className='empty-text'>暂无{activeTab.title}推荐</Text>
+                        </View>
+                      )}
+                    </View>
+                  </ScrollView>
+                </View>
+              )
+            })()}
+          </>
         ) : (
           <View className='section-empty'>
             <Text className='empty-text'>暂无推荐结果，请稍后再试或调整档案信息</Text>
           </View>
         )}
       </View>
+
+      </PullToRefresh>
 
       <CustomTabBar />
     </ScrollView>
