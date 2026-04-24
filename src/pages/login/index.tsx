@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import { View } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { getEnv } from '@tarojs/taro'
 import { Card, Form, Input, Button, Toast } from 'antd-mobile'
 import { authApi } from '@/api/auth'
 import { useAuth } from '@/contexts/useAuthHook'
 import './index.scss'
 
+const IS_WEAPP = getEnv() === 'WEAPP'
+
 export default function LoginPage() {
-  const { login } = useAuth()
+  const { login, wechatLogin } = useAuth()
   const [loading, setLoading] = useState(false)
+  const [wechatLoading, setWechatLoading] = useState(false)
   const [form] = Form.useForm()
 
   const onFinish = async (values: { username: string; password: string }) => {
@@ -32,6 +35,17 @@ export default function LoginPage() {
     }
   }
 
+  const handleWechatLogin = async () => {
+    try {
+      setWechatLoading(true)
+      await wechatLogin()
+    } catch {
+      // wechatLogin 内部已处理 toast
+    } finally {
+      setWechatLoading(false)
+    }
+  }
+
   const goToRegister = () => {
     Taro.navigateTo({ url: '/pages/register/index' })
   }
@@ -48,6 +62,30 @@ export default function LoginPage() {
             <View className="login-title">高考志愿通</View>
             <View className="login-subtitle">登录后即可查看推荐结果与个人档案</View>
           </View>
+
+          {/* 微信一键登录 - 仅微信小程序显示 */}
+          {IS_WEAPP && (
+            <View className="wechat-login-section">
+              <Button
+                block
+                size="large"
+                className="wechat-login-btn"
+                loading={wechatLoading}
+                onClick={handleWechatLogin}
+              >
+                <View className="wechat-login-btn-content">
+                  <View className="wechat-icon" />
+                  微信一键登录
+                </View>
+              </Button>
+              <View className="login-divider">
+                <View className="login-divider-line" />
+                <View className="login-divider-text">或使用账号登录</View>
+                <View className="login-divider-line" />
+              </View>
+            </View>
+          )}
+
           <Form
             form={form}
             layout="vertical"

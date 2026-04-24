@@ -42,6 +42,59 @@
   line-height: 1.5;
 }
 
+/* 微信登录按钮 */
+.wechat-login-section {
+  margin-bottom: 24px;
+}
+
+.wechat-login-btn {
+  background-color: #07c160 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  height: 48px !important;
+  line-height: 48px !important;
+}
+
+.wechat-login-btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.wechat-icon {
+  width: 22px;
+  height: 22px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M8.5 11a1 1 0 1 0 0-2 1 1 0 0 0 0 2z' fill='white'/%3E%3Cpath d='M14.5 11a1 1 0 1 0 0-2 1 1 0 0 0 0 2z' fill='white'/%3E%3Cpath d='M8.5 7C5.46 7 3 9.24 3 12c0 1.56.77 2.96 2 3.92V18l2.17-1.3c.73.24 1.52.37 2.33.37.15 0 .29 0 .44-.02A5.47 5.47 0 0 1 9.5 14.5c0-2.82 2.46-5.11 5.5-5.11.15 0 .29 0 .44.02C15.06 7.54 12.04 7 8.5 7z' fill='white'/%3E%3Cpath d='M21 14.5c0-2.49-2.46-4.5-5.5-4.5S10 12.01 10 14.5s2.46 4.5 5.5 4.5c.69 0 1.36-.13 1.97-.35L19.5 20v-2.12c1.02-.83 1.5-2.03 1.5-3.38z' fill='white'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  flex-shrink: 0;
+}
+
+/* 分隔线 */
+.login-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0 8px;
+  gap: 12px;
+}
+
+.login-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border, #e4e4e7);
+}
+
+.login-divider-text {
+  font-size: 12px;
+  color: var(--color-text-tertiary, #a1a1aa);
+  white-space: nowrap;
+}
+
 .login-footer {
   margin-top: 24px;
   text-align: center;
