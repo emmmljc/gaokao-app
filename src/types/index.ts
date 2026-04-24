@@ -18,6 +18,12 @@ export interface RegisterRequest {
   email?: string;
 }
 
+export interface WechatLoginRequest {
+  code: string;
+  nickName: string;
+  avatarUrl: string;
+}
+
 export interface AuthResponse {
   userId: number;
   username: string;
