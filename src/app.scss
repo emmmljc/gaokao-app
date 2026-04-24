@@ -128,7 +128,8 @@ input, textarea, [contenteditable] {
   scroll-behavior: smooth;
 }
 
-/* Scrollbar styles */
+/* Scrollbar styles - H5 only, not supported in WeChat Mini Program */
+/* #ifdef h5 */
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -143,6 +144,7 @@ input, textarea, [contenteditable] {
 ::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
+/* #endif */
 
 /* Ant Design Mobile overrides for native feel */
 .adm-list-item-content-prefix,

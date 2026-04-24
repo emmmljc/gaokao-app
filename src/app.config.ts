@@ -1,6 +1,5 @@
 export default defineAppConfig({
   pages: [
-    'pages/welcome/index',
     'pages/home/index',
     'pages/login/index',
     'pages/register/index',
@@ -19,7 +18,11 @@ export default defineAppConfig({
     navigationBarBackgroundColor: '#4f46e5',
     navigationBarTitleText: '高考志愿通',
     navigationBarTextStyle: 'white',
+    backgroundColor: '#f5f5f5',
+    enablePullDownRefresh: false,
+    onReachBottomDistance: 50,
   },
+  lazyCodeLoading: 'requiredComponents',
   tabBar: {
     custom: true,
     color: '#8e8e93',
@@ -30,26 +33,26 @@ export default defineAppConfig({
       {
         pagePath: 'pages/home/index',
         text: '首页',
-        iconPath: 'assets/logo.png',
-        selectedIconPath: 'assets/logo.png',
+        iconPath: 'assets/tabbar/home.png',
+        selectedIconPath: 'assets/tabbar/home-active.png',
       },
       {
         pagePath: 'pages/major-compare/index',
         text: '专业',
-        iconPath: 'assets/logo.png',
-        selectedIconPath: 'assets/logo.png',
+        iconPath: 'assets/tabbar/major.png',
+        selectedIconPath: 'assets/tabbar/major-active.png',
       },
       {
         pagePath: 'pages/recommend/index',
         text: '推荐',
-        iconPath: 'assets/logo.png',
-        selectedIconPath: 'assets/logo.png',
+        iconPath: 'assets/tabbar/recommend.png',
+        selectedIconPath: 'assets/tabbar/recommend-active.png',
       },
       {
         pagePath: 'pages/profile/index',
         text: '我的',
-        iconPath: 'assets/logo.png',
-        selectedIconPath: 'assets/logo.png',
+        iconPath: 'assets/tabbar/profile.png',
+        selectedIconPath: 'assets/tabbar/profile-active.png',
       },
     ],
   },
