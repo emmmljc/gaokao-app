@@ -1,9 +1,7 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { PullToRefresh } from 'antd-mobile'
 import { useAuth } from '@/contexts/useAuthHook'
 import { useSwipeTab } from '@/hooks/useSwipeTab'
-import CustomTabBar from '@/custom-tab-bar'
 import OverflowMenu from '@/components/OverflowMenu'
 import './index.scss'
 
@@ -73,10 +71,10 @@ export default function HomePage() {
         <Text className="home-top-bar-title">高考志愿通</Text>
         <OverflowMenu />
       </View>
-      <PullToRefresh
-        onRefresh={async () => {
-          await Taro.getCurrentPages()
-        }}
+      <ScrollView
+        className="home-scroll-view"
+        scrollY
+        style={{ height: '100vh' }}
       >
         {/* Hero Section - Compact */}
         <View className="hero-section">
@@ -116,9 +114,7 @@ export default function HomePage() {
             ))}
           </View>
         </View>
-      </PullToRefresh>
-
-      <CustomTabBar />
+      </ScrollView>
     </View>
   )
 }

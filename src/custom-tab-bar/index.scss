@@ -6,9 +6,11 @@
   left: 0;
   right: 0;
   z-index: 999;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.98);
+  /* #ifdef h5 */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  /* #endif */
   border-top: 0.5px solid rgba(0, 0, 0, 0.06);
 }
 
@@ -31,7 +33,7 @@
   min-height: 44px;
   transition: all 0.2s ease;
   position: relative;
-  cursor: pointer;
+  /* cursor: pointer; - Removed for WeChat Mini Program compatibility */
 }
 
 .tabbar-item:active {
@@ -58,7 +60,9 @@
   transform: scale(1.05);
 }
 
-.tabbar-icon-wrapper svg {
+.tabbar-icon {
+  width: 22px;
+  height: 22px;
   display: block;
 }
 
@@ -100,7 +104,9 @@
 
 .tabbar-safe-area {
   height: env(safe-area-inset-bottom, 0px);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.98);
+  /* #ifdef h5 */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  /* #endif */
 }

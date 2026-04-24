@@ -1,148 +1,34 @@
-import { View } from '@tarojs/components'
+import { View, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useAuth } from '@/contexts/useAuthHook'
 import './index.scss'
 
 const TAB_LIST = [
-  { pagePath: '/pages/home/index', text: '首页' },
-  { pagePath: '/pages/major-compare/index', text: '专业' },
-  { pagePath: '/pages/recommend/index', text: '推荐' },
-  { pagePath: '/pages/profile/index', text: '我的' },
+  { 
+    pagePath: '/pages/home/index', 
+    text: '首页',
+    icon: '/assets/tabbar/home.png',
+    iconActive: '/assets/tabbar/home-active.png'
+  },
+  { 
+    pagePath: '/pages/major-compare/index', 
+    text: '专业',
+    icon: '/assets/tabbar/major.png',
+    iconActive: '/assets/tabbar/major-active.png'
+  },
+  { 
+    pagePath: '/pages/recommend/index', 
+    text: '推荐',
+    icon: '/assets/tabbar/recommend.png',
+    iconActive: '/assets/tabbar/recommend-active.png'
+  },
+  { 
+    pagePath: '/pages/profile/index', 
+    text: '我的',
+    icon: '/assets/tabbar/profile.png',
+    iconActive: '/assets/tabbar/profile-active.png'
+  },
 ]
-
-// SVG Icon Components
-function HomeIcon({ active }: { active: boolean }) {
-  const color = active ? 'var(--color-primary)' : '#8e8e93'
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  )
-}
-
-function SchoolIcon({ active }: { active: boolean }) {
-  const color = active ? 'var(--color-primary)' : '#8e8e93'
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-      <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
-    </svg>
-  )
-}
-
-function AnalysisIcon({ active }: { active: boolean }) {
-  const color = active ? 'var(--color-primary)' : '#8e8e93'
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="18" y1="20" x2="18" y2="10" />
-      <line x1="12" y1="20" x2="12" y2="4" />
-      <line x1="6" y1="20" x2="6" y2="14" />
-    </svg>
-  )
-}
-
-function MajorIcon({ active }: { active: boolean }) {
-  const color = active ? 'var(--color-primary)' : '#8e8e93'
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-      <line x1="9" y1="7" x2="16" y2="7" />
-      <line x1="9" y1="11" x2="14" y2="11" />
-    </svg>
-  )
-}
-
-function RecommendIcon({ active }: { active: boolean }) {
-  const color = active ? 'var(--color-primary)' : '#8e8e93'
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M9 18h6" />
-      <path d="M10 22h4" />
-      <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14" />
-    </svg>
-  )
-}
-
-function ProfileIcon({ active }: { active: boolean }) {
-  const color = active ? 'var(--color-primary)' : '#8e8e93'
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M20 21a8 8 0 1 0-16 0" />
-    </svg>
-  )
-}
-
-function TabIcon({ pagePath, active }: { pagePath: string; active: boolean }) {
-  switch (pagePath) {
-    case '/pages/home/index':
-      return <HomeIcon active={active} />
-    case '/pages/major-compare/index':
-      return <MajorIcon active={active} />
-    case '/pages/recommend/index':
-      return <RecommendIcon active={active} />
-    case '/pages/profile/index':
-      return <ProfileIcon active={active} />
-    default:
-      return null
-  }
-}
 
 export default function CustomTabBar() {
   const currentPages = Taro.getCurrentPages()
@@ -169,7 +55,12 @@ export default function CustomTabBar() {
               onClick={() => handleSwitch(item.pagePath)}
             >
               <View className="tabbar-icon-wrapper">
-                <TabIcon pagePath={item.pagePath} active={isActive} />
+                <Image
+                  className="tabbar-icon"
+                  src={isActive ? item.iconActive : item.icon}
+                  mode="aspectFit"
+                  style={{ width: '22px', height: '22px' }}
+                />
                 {isActive && <View className="tabbar-active-dot" />}
               </View>
               <View className={`tabbar-text ${isActive ? 'tabbar-text-active' : ''}`}>
