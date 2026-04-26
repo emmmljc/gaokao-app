@@ -46,7 +46,7 @@ function displayValue(field: PickerField, value: string | number | undefined): s
 }
 
 export default function ProfilePage() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -298,6 +298,21 @@ const swipeHandlers = useSwipeTab()
       </Form>
 
       </PullToRefresh>
+
+      <View className='profile-logout-section'>
+        <Button
+          block
+          fill='none'
+          className='profile-logout-btn'
+          onClick={() => {
+            logout()
+            Taro.redirectTo({ url: '/pages/login/index' })
+          }}
+        >
+          退出登录
+        </Button>
+      </View>
+
       <CustomTabBar />
     </View>
   )

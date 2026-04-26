@@ -6,13 +6,13 @@ import {
   Button,
   Input,
   Picker,
-  Popup,
   Tag,
   Empty,
   Toast,
   DotLoading,
   ProgressBar,
   PullToRefresh,
+  Selector,
 } from 'antd-mobile'
 import ReactECharts from 'echarts-for-react'
 import { majorCompareApi } from '@/api/majorCompare'
@@ -109,8 +109,6 @@ export default function MajorComparePage() {
 
   // Picker visibility states
   const [familyPickerVisible, setFamilyPickerVisible] = useState(false)
-  const [subjectPickerVisible, setSubjectPickerVisible] = useState(false)
-  const [schoolLevelPickerVisible, setSchoolLevelPickerVisible] = useState(false)
 
   const selectedFamilyOption = useMemo(
     () => familyOptions.find((item) => item.value === selectedFamily),
@@ -347,15 +345,14 @@ export default function MajorComparePage() {
             </View>
           </View>
 
-          <View className="filter-row">
+          <View className="filter-row filter-row-inline">
             <Text className="filter-label">科类</Text>
-            <View
-              className="filter-picker-trigger"
-              onClick={() => setSubjectPickerVisible(true)}
-            >
-              <Text className="filter-picker-value">{subjectType}</Text>
-              <Text className="filter-picker-arrow">▼</Text>
-            </View>
+            <Selector
+              options={SUBJECT_TYPES.map(t => ({ label: t, value: t }))}
+              value={[subjectType]}
+              onChange={(val) => setSubjectType(val[0] as string)}
+              style={{ '--border-radius': '8px', '--gap': '8px' }}
+            />
           </View>
 
           <View className="filter-row">
@@ -369,17 +366,14 @@ export default function MajorComparePage() {
             />
           </View>
 
-          <View className="filter-row">
+          <View className="filter-row filter-row-inline">
             <Text className="filter-label">院校层级</Text>
-            <View
-              className="filter-picker-trigger"
-              onClick={() => setSchoolLevelPickerVisible(true)}
-            >
-              <Text className="filter-picker-value">
-                {SCHOOL_LEVELS.find(l => l.value === schoolLevel)?.label || '全部层级'}
-              </Text>
-              <Text className="filter-picker-arrow">▼</Text>
-            </View>
+            <Selector
+              options={SCHOOL_LEVELS.map(l => ({ label: l.label, value: l.value }))}
+              value={schoolLevel ? [schoolLevel] : []}
+              onChange={(val) => setSchoolLevel(val[0] as string ?? '')}
+              style={{ '--border-radius': '8px', '--gap': '6px' }}
+            />
           </View>
 
           <Button
@@ -393,56 +387,17 @@ export default function MajorComparePage() {
           </Button>
         </Card>
 
-        {/* Family Picker Popup */}
-        <Popup
+        {/* Family Picker */}
+        <Picker
+          columns={[familyOptions.map(f => ({ label: f.label, value: f.value }))]}
           visible={familyPickerVisible}
-          onMaskClick={() => setFamilyPickerVisible(false)}
-          bodyStyle={{ height: '40vh' }}
-        >
-          <Picker
-            columns={[familyOptions.map(f => ({ label: f.label, value: f.value }))]}
-            value={selectedFamily ? [selectedFamily] : undefined}
-            onConfirm={(val) => {
-              setSelectedFamily(val?.[0] as string)
-              setFamilyPickerVisible(false)
-            }}
-            onCancel={() => setFamilyPickerVisible(false)}
-          />
-        </Popup>
-
-        {/* Subject Type Picker Popup */}
-        <Popup
-          visible={subjectPickerVisible}
-          onMaskClick={() => setSubjectPickerVisible(false)}
-          bodyStyle={{ height: '40vh' }}
-        >
-          <Picker
-            columns={[SUBJECT_TYPES.map(t => ({ label: t, value: t }))]}
-            value={[subjectType]}
-            onConfirm={(val) => {
-              setSubjectType(val[0] as string)
-              setSubjectPickerVisible(false)
-            }}
-            onCancel={() => setSubjectPickerVisible(false)}
-          />
-        </Popup>
-
-        {/* School Level Picker Popup */}
-        <Popup
-          visible={schoolLevelPickerVisible}
-          onMaskClick={() => setSchoolLevelPickerVisible(false)}
-          bodyStyle={{ height: '40vh' }}
-        >
-          <Picker
-            columns={[SCHOOL_LEVELS.map(l => ({ label: l.label, value: l.value }))]}
-            value={[schoolLevel]}
-            onConfirm={(val) => {
-              setSchoolLevel(val?.[0] as string ?? '')
-              setSchoolLevelPickerVisible(false)
-            }}
-            onCancel={() => setSchoolLevelPickerVisible(false)}
-          />
-        </Popup>
+          value={selectedFamily ? [selectedFamily] : undefined}
+          onConfirm={(val) => {
+            setSelectedFamily(val?.[0] as string)
+            setFamilyPickerVisible(false)
+          }}
+          onCancel={() => setFamilyPickerVisible(false)}
+        />
 
         {/* Results Section */}
         {loading ? (
