@@ -283,7 +283,7 @@ function extractChartDataFromSteps(steps: ChatIntermediateStep[]): string {
   return chartTags.join('\n\n')
 }
 
-export function useChat(): UseChatResult {
+export function useChat(enabled = true): UseChatResult {
   const [conversations, setConversations] = useState<StoredConversation[]>(() => {
     const stored = readStoredConversations()
     return stored.length > 0 ? stored : [createConversationRecord()]
@@ -597,6 +597,7 @@ export function useChat(): UseChatResult {
   }, [activeConversationId, ensureConversation, markStreaming, refreshHealth, updateConversation])
 
   useEffect(() => {
+    if (!enabled) return
     if (initRef.current) return
     initRef.current = true
     void refreshHealth()
@@ -607,7 +608,7 @@ export function useChat(): UseChatResult {
       }
       controllersRef.current.clear()
     }
-  }, [ensureConversation, refreshHealth])
+  }, [enabled, ensureConversation, refreshHealth])
 
   return {
     conversations: conversationSummaries,

@@ -37,7 +37,7 @@ const quickEntries = [
     key: 'chat',
     title: '智能填表',
     path: '/pages/chat/index',
-    isTab: false,
+    isTab: true,
   },
   {
     key: 'profile',

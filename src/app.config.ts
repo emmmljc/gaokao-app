@@ -46,6 +46,12 @@ export default defineAppConfig({
         selectedIconPath: 'assets/logo.png',
       },
       {
+        pagePath: 'pages/chat/index',
+        text: 'AI助手',
+        iconPath: 'assets/logo.png',
+        selectedIconPath: 'assets/logo.png',
+      },
+      {
         pagePath: 'pages/profile/index',
         text: '我的',
         iconPath: 'assets/logo.png',
