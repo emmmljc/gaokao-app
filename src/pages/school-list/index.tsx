@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { SearchBar, Tag, Button, Empty, DotLoading, Picker, Popup, PullToRefresh } from 'antd-mobile'
+import { SearchBar, Tag, Button, Empty, DotLoading, Picker, PullToRefresh } from 'antd-mobile'
 import { schoolApi } from '@/api/school'
 import type { School } from '@/types'
 import { useSwipeTab } from '@/hooks/useSwipeTab'
@@ -55,8 +55,8 @@ export default function SchoolListPage() {
     })
   }, [schools, tag985, tag211, doubleFirst])
 
-  const handleSchoolClick = (schoolId: string) => {
-    Taro.navigateTo({ url: `/pages/school-detail/index?schoolId=${schoolId}` })
+  const handleSchoolClick = (id: number) => {
+    Taro.navigateTo({ url: `/pages/school-detail/index?schoolId=${id}` })
   }
 
   const clearFilters = () => {
@@ -112,21 +112,16 @@ export default function SchoolListPage() {
                 </Text>
                 <Text className="filter-picker-arrow">▼</Text>
               </View>
-              <Popup
+              <Picker
+                columns={[PROVINCES.map(p => ({ label: p, value: p }))]}
                 visible={provincePickerVisible}
-                onMaskClick={() => setProvincePickerVisible(false)}
-                bodyStyle={{ height: '40vh' }}
-              >
-                <Picker
-                  columns={[PROVINCES.map(p => ({ label: p, value: p }))]}
-                  value={province ? [province] : undefined}
-                  onConfirm={(val) => {
-                    setProvince(val?.[0] as string)
-                    setProvincePickerVisible(false)
-                  }}
-                  onCancel={() => setProvincePickerVisible(false)}
-                />
-              </Popup>
+                onClose={() => setProvincePickerVisible(false)}
+                value={province ? [province] : []}
+                onConfirm={(val) => {
+                  setProvince(val?.[0] as string)
+                  setProvincePickerVisible(false)
+                }}
+              />
             </View>
 
             <View className="filter-item">
@@ -140,21 +135,16 @@ export default function SchoolListPage() {
                 </Text>
                 <Text className="filter-picker-arrow">▼</Text>
               </View>
-              <Popup
+              <Picker
+                columns={[SCHOOL_TYPES.map(t => ({ label: t, value: t }))]}
                 visible={schoolTypePickerVisible}
-                onMaskClick={() => setSchoolTypePickerVisible(false)}
-                bodyStyle={{ height: '40vh' }}
-              >
-                <Picker
-                  columns={[SCHOOL_TYPES.map(t => ({ label: t, value: t }))]}
-                  value={schoolType ? [schoolType] : undefined}
-                  onConfirm={(val) => {
-                    setSchoolType(val?.[0] as string)
-                    setSchoolTypePickerVisible(false)
-                  }}
-                  onCancel={() => setSchoolTypePickerVisible(false)}
-                />
-              </Popup>
+                onClose={() => setSchoolTypePickerVisible(false)}
+                value={schoolType ? [schoolType] : []}
+                onConfirm={(val) => {
+                  setSchoolType(val?.[0] as string)
+                  setSchoolTypePickerVisible(false)
+                }}
+              />
             </View>
           </View>
 
@@ -211,7 +201,7 @@ export default function SchoolListPage() {
                 <View
                   key={school.id}
                   className="school-card"
-                  onClick={() => handleSchoolClick(school.schoolId)}
+                  onClick={() => handleSchoolClick(school.id)}
                 >
                   <View className="school-card-header">
                     <View className="school-avatar">
