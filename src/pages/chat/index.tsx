@@ -9,9 +9,55 @@ import CustomTabBar from '@/custom-tab-bar'
 import type { ChatIntermediateStep, ChatMessage } from '@/types/chat'
 import './index.scss'
 
+function getLatestStepTitle(steps: ChatIntermediateStep[]): string | undefined {
+  for (let i = steps.length - 1; i >= 0; i--) {
+    if ((steps[i].status === 'running' || steps[i].status === 'streaming') && steps[i].title) {
+      return steps[i].title
+    }
+  }
+  return steps.length > 0 ? steps[steps.length - 1].title : undefined
+}
+
+function ChatStepItem({ step }: { step: ChatIntermediateStep }) {
+  const [expanded, setExpanded] = useState(true)
+  return (
+    <View className='chat-step-item'>
+      <View
+        className='chat-step-item-header'
+        onClick={() => setExpanded(!expanded)}
+      >
+        <Text className='chat-step-item-arrow'>{expanded ? '▾' : '▸'}</Text>
+        <Text className='chat-step-item-title'>{step.title || '处理中'}</Text>
+        <Text className={`chat-step-item-status is-${step.status}`}>
+          {step.status === 'running' ? '运行中' : step.status === 'streaming' ? '输出中' : '完成'}
+        </Text>
+      </View>
+      {expanded && (
+        <View className='chat-step-item-content'>
+          <Text className='chat-step-item-content-text'>
+            {step.content || (step.status !== 'done' ? '正在处理...' : '')}
+          </Text>
+        </View>
+      )}
+    </View>
+  )
+}
+
 function ChatStepPanel({ steps, messageStatus }: { steps: ChatIntermediateStep[]; messageStatus: string }) {
-  const [expanded, setExpanded] = useState(false)
-  const isAllDone = messageStatus === 'done' || steps.every((s) => s.status === 'done')
+  const isAllDone = messageStatus === 'done' || steps.every(s => s.status === 'done')
+  const [expanded, setExpanded] = useState(true)
+  const listRef = useRef<any>(null)
+  const headerText = isAllDone
+    ? `已完成 ${steps.length} 个分析步骤`
+    : `正在${getLatestStepTitle(steps) ?? '分析处理'}...`
+
+  useEffect(() => {
+    if (expanded && listRef.current) {
+      try {
+        listRef.current.scrollTo?.({ y: 999999 })
+      } catch { /* ignore */ }
+    }
+  }, [steps, expanded])
 
   if (steps.length === 0) return null
 
@@ -19,29 +65,34 @@ function ChatStepPanel({ steps, messageStatus }: { steps: ChatIntermediateStep[]
     <View className={`chat-step-panel ${isAllDone ? 'is-done' : 'is-running'}`}>
       <View className='step-panel-header' onClick={() => setExpanded(!expanded)}>
         <Text className='step-panel-icon'>{expanded ? '▾' : '▸'}</Text>
-        <Text className='step-panel-text'>
-          {isAllDone ? `已完成 ${steps.length} 个分析步骤` : '正在分析处理...'}
-        </Text>
+        <Text className='step-panel-text'>{headerText}</Text>
         {!isAllDone && <DotLoading color='primary' />}
       </View>
       {expanded && (
         <View className='step-panel-content'>
-          {steps.map((step) => (
-            <View key={step.id} className='step-item'>
-              <Text className='step-item-title'>{step.title || '处理中'}</Text>
-              <Text className={`step-item-status is-${step.status}`}>
-                {step.status === 'running' ? '运行中' : step.status === 'streaming' ? '输出中' : '完成'}
-              </Text>
-            </View>
-          ))}
+          <ScrollView scrollY className='step-list-scroll' ref={listRef}>
+            {steps.map(step => (
+              <ChatStepItem key={step.id} step={step} />
+            ))}
+          </ScrollView>
         </View>
       )}
     </View>
   )
 }
 
+function stripChartTags(content: string): string {
+  return content
+    .replace(/<chart-view\s+content="[\s\S]*?"\s*\/?>/gi, '')
+    .replace(/<chart-view[\s\S]*?<\/chart-view>/gi, '')
+    .replace(/```\s*vis-chart\s*[\s\S]*?```/gi, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 function ChatMessageBubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === 'user'
+  const displayContent = isUser ? message.content : stripChartTags(message.content)
 
   return (
     <View className={`chat-message-row ${isUser ? 'is-user' : 'is-ai'}`}
@@ -63,7 +114,7 @@ function ChatMessageBubble({ message }: { message: ChatMessage }) {
           <ChatStepPanel steps={message.intermediateSteps} messageStatus={message.status} />
         )}
         <Text className={isUser ? 'chat-message-text chat-message-text-user' : 'chat-message-text'}>
-          {message.content || (message.status === 'streaming' ? '正在思考...' : '')}
+          {displayContent || (message.status === 'streaming' ? '正在思考...' : '')}
         </Text>
         {message.status === 'streaming' && <Text className='typing-cursor'>|</Text>}
       </View>
